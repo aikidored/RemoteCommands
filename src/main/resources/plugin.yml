@@ -1,0 +1,10 @@
+name: RemoteCommands
+main: net.elitegame.aiki.RC.main
+version: 2.2
+author: aiki
+commands:
+   RC:
+      description: Parent Command for Remote Commands
+      usage: /RC [server / Sub-Command] [Message]
+      permission: remotecommands.use
+      permission-message: You don't have remotecommands.use

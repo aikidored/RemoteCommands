@@ -1,0 +1,55 @@
+#
+# Plugin made by Aikidored
+#
+
+#
+# Remote Commands Message Customization List 
+# These messages are sent to the Player
+# These do not include any Debug Messages in Console
+#
+
+# This Prefix shows before any of the below messages.
+Prefix: '&7[&3&lRC&7]' 
+
+# Shown when turnin on debug mode
+Debug-On: '&e>>&3 Debug On'
+
+# Shown when turning off debug mode
+Debug-Off: '&e>>&3 Debug Off'
+
+# Shown when reloading the plugin
+Plugin-Reload: '&e>>&3 Plugin Reloaded'
+
+# Message sent to command sender when remote server verifies command received
+Sender-Confirmation: '&e>>&3 Command Sent'
+
+# Title of Server list
+RC-Server-List: '&e>>&3 Server List '
+
+# Below is the Help Menu Options
+Help-Menu-Title: '&e>>&3Remote Commands Help Menu'
+Help-1: '&e>>&3&6/&3RC &7[&3Server&7]&3 &7[&3Command&7]&3 &e>>&3 Runs Command to External Servers'
+Help-2: '&e>>&3&6/&3RC SendAll &e>>&3 Sends Command to all Servers'
+Help-3: '&e>>&3&6/&3RC Reload &e>>&3 Reloads the Plugin'
+Help-4: '&e>>&3&6/&3RC Help &e>>&3 Opens Help Menu'
+Help-5: '&e>>&3&6/&3RC List &e>>&3 Lists Available Servers'
+Help-6: '&e>>&3&6/&3RC Debug &7[&3True&6/&3False&7]&3 &e>>&3 Switches Debug setting to true or false'
+
+#
+# Below are the Error Messages
+#
+
+# Shows whene player does not send enough parameters.
+Error-More-Arguments-Needed: '&e>>&3 More Arguments Needed'
+
+# Shows when Unknown Command is Sent. 
+Error-Displaying-Help-Menu: '&e>>&3 Unknown Command. Displaying Help Menu '
+
+# You should not see this Message. but May Occur if Response from Server is Abnormal.
+Error-Command-Send-Misc: '&e>>&3 An Error Occured. Please See Console '
+
+# Shows when invalid passkey is sent from server to remote server.
+Error-Invalid-Passkey: '&e>>&3 An Error Occured. Please See Console '
+
+# Shows when plugin could not connect to remote server.
+Error-Connection-Error: '&e>>&3 No Server Response. Please see Console '

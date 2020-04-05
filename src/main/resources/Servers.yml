@@ -1,0 +1,37 @@
+#
+# Plugin made by Aikidored
+#
+
+#
+# Remote Commands Server List 
+# 
+
+#   Server List Syntax 
+#   
+#   #: 
+#       Name:
+#       Address: 
+#       Port:
+#
+
+# Start the Server List at 0
+Server-List:
+    0:                          #<- This is number identifier for each server. this will go up 1 for every server added
+        Name: Hub               #<- This is where you put the Name that you want to call this server. This name is what you use when call to command
+        Address: 192.168.1.1    #<- This is where you put the Server IP address for the Client to send commands to
+        Port: 4001              #<- This is where you put the Server Port that the Listener will be Listening Upon
+        
+    1:
+        Name: Survival
+        Address: localhost
+        Port: 4302
+        
+    2:
+        Name: Creative
+        Address: localhost
+        Port: 4403
+        
+    3: 
+        Name: ThisServer
+        Address: localhost
+        Port: 4000

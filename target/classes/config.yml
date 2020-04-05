@@ -1,0 +1,38 @@
+#
+# Plugin made by Aikidored
+#
+
+#
+# Remote Commands was made to send commands between multiple seperate 
+# servers as long as they are configured correctly.
+#
+
+# Version Information:
+# Dont Change these Values Unless you know what you are doing.
+Config-Version: 2.0
+
+# Debug Options:
+# Outputs General Debug Information while plugin is Performing actions
+Debug: false
+
+# Server Name:
+# Informs Server that are sent Commands Which Server is sending the Command
+Server-Name: ThisServer
+
+# The Pass Key is used to protect against rogue commands being sent to your server.
+# All Servers using RemoteCommands must use the same PassKey or Connections will be Denied
+# Passkey Must be a Positive Number between 3-6 Digits
+# PassKey is sent with a Basic Encryption to Protect your Server
+PassKey: 123456
+
+
+# The Port-Listener defines what port listeners uses.
+# This value must different from any other ports being used on servers computer. 
+Port-Listener: 4000
+
+# Below is where you define your servers, the address for them, and the port they listen on.
+# Server-Count is where you tell the plugin how many servers you have listed below 
+# If this value is not correct. the Plugin will not Initialize.
+# There is a Maximum of 100 servers you can list. Contact me if you need more
+Server-Count: 4
+# To make sure you get the right count, Look at your last server and add 1

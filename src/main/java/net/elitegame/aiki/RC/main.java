@@ -98,7 +98,7 @@ public class main extends JavaPlugin
     public void onEnable() {    // Displays Enable Message 
 		loadPlugin();
     	System.out.println("########################"); 
-    	System.out.println("# Remote Commands v2.2 #");
+    	System.out.println("# Remote Commands v2.3 #");
     	System.out.println("########################");
     	System.out.println("[Remote Commands] Made by Aikidored");
     }
@@ -106,7 +106,7 @@ public class main extends JavaPlugin
     public void onDisable() {
         // Displays Disable Message
     	System.out.println( "########################"); 
-    	System.out.println( "# Remote Commands v2.2 #");
+    	System.out.println( "# Remote Commands v2.3 #");
     	System.out.println( "########################");
     	System.out.println("[Remote Commands] Made by Aikidored");
     }	

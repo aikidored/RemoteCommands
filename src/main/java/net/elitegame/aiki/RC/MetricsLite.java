@@ -120,7 +120,15 @@ public class MetricsLite {
         // Load the data
         serverUUID = config.getString("serverUuid");
         logFailedRequests = config.getBoolean("logFailedRequests", false);
-        enabled = true;
+        enabled = config.getBoolean("enabled", true);
+        if (config.getBoolean("enabled", true) == true) {
+        	System.out.println("#######################################");
+        	System.out.println("#### Remote Commands  ####");
+        	System.out.println("#### It seems you have Bstats Disabled");
+        	System.out.println("#### Please Consider Enabling it. It Does NOT collect any personal information ");
+        	System.out.println("#### You can see what data is collected at https://bstats.org/plugin/bukkit/Remote%20Commands/6397");
+        	System.out.println("#######################################");
+        }
         logSentData = config.getBoolean("logSentData", false);
         logResponseStatusText = config.getBoolean("logResponseStatusText", false);
         if (enabled) {

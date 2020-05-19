@@ -1,6 +1,6 @@
 name: RemoteCommands
 main: net.elitegame.aiki.RC.main
-version: 2.3
+version: 3.0
 author: aiki
 commands:
    RC:
@@ -8,3 +8,8 @@ commands:
       usage: /RC [server / Sub-Command] [Message]
       permission: remotecommands.use
       permission-message: You don't have remotecommands.use
+   RB:
+      description: This is a command will Broadcast a Message of your choice to another server
+      usage: /RB [server / Command] [Message]
+      permission: rb.Use
+      permission-message: You don't have rb.use. 

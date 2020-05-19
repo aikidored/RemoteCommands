@@ -8,14 +8,17 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
-public class GreetingServer extends Thread{
+
+public class Server extends Thread{
    private ServerSocket serverSocket;
    Encryption Decrypt = new Encryption(); //Calls Encryption Class
    String storedMessage = " "; // String established for Storing Message
    
    
-   public GreetingServer(int port) throws IOException { //method for new server socket creation
+   public Server(int port) throws IOException { //method for new server socket creation
       serverSocket = new ServerSocket(port); //defines new socket
       main.debug("[Remote Commands][Debug] Listener Listening on Port: "+port);
    }
@@ -30,15 +33,31 @@ public class GreetingServer extends Thread{
             String Passkey = in.readUTF();
             if (CheckKey(Passkey) == true) {
             	out.writeUTF("True");
-            	String Server = in.readUTF();
-            	String Sender = in.readUTF();
-            	String Command = in.readUTF();
-            	main.debug("[Remote Commands][Debug][Server] Server: "+Server);
-            	main.debug("[Remote Commands][Debug][Server] Sender: "+Sender);
-            	main.debug("[Remote Commands][Debug][Server] Command: "+Command);
-        		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-    			String LogString = "["+timeStamp+"][Received] Player: ["+Sender+"] Sent ["+Command+"] from Server: "+Server+" At: "+server.getRemoteSocketAddress();
-            	main.addCommand(Command , LogString);
+            	String IncomingType = in.readUTF(); // Should Receive "Command", "Broadcast", or "Test"
+            	if (IncomingType.equalsIgnoreCase("Command")) {
+	            	String Server = in.readUTF();
+	            	String Sender = in.readUTF();
+	            	String Command = in.readUTF();
+	            	main.debug("[Remote Commands][Debug][Server] Server: "+Server);
+	            	main.debug("[Remote Commands][Debug][Server] Sender: "+Sender);
+	            	main.debug("[Remote Commands][Debug][Server] Command: "+Command);
+	        		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+	    			String LogString = "["+timeStamp+"][Received] Player: ["+Sender+"] Sent Command ["+Command+"] from Server: "+Server+" At: "+server.getRemoteSocketAddress();
+	            	main.addCommand(Command , LogString);
+            	} else if (IncomingType.equalsIgnoreCase("Broadcast")) {
+	            	String Server = in.readUTF();
+	            	String Sender = in.readUTF();
+	            	String Broadcast = in.readUTF();
+	            	main.debug("[Remote Commands][Debug][Server] Server: "+Server);
+	            	main.debug("[Remote Commands][Debug][Server] Sender: "+Sender);
+	            	main.debug("[Remote Commands][Debug][Server] Broadcast: "+Broadcast);
+	        		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+	    			String LogString = "["+timeStamp+"][Received] Player: ["+Sender+"] Sent Broadcast ["+Broadcast+"] from Server: "+Server+" At: "+server.getRemoteSocketAddress();
+	    			Bukkit.broadcastMessage(main.PM[18] + ChatColor.translateAlternateColorCodes('&', Broadcast));
+	    			main.logString(LogString);
+            	} else if (IncomingType.equalsIgnoreCase("Test")) {
+            		out.writeUTF("Online");
+            	}
             } else {
             	main.debug("[Remote Commands][Debug][Server] Invalid Passkey Recieved from: "+server.getRemoteSocketAddress());
                 out.writeUTF("Invalid PassKey"); //Throws invalid passkey error 

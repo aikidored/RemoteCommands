@@ -9,7 +9,8 @@
 #
 
 # This Prefix shows before any of the below messages.
-Prefix: '&7[&3&lRC&7]' 
+CommandPrefix: '&7[&3&lRC&7]' 
+BroadcastPrefix: '&7[&3&lRC&7]' # Shown Before Any Broadcasts 
 
 # Shown when turnin on debug mode
 Debug-On: '&e>>&3 Debug On'
@@ -34,6 +35,14 @@ Help-3: '&e>>&3&6/&3RC Reload &e>>&3 Reloads the Plugin'
 Help-4: '&e>>&3&6/&3RC Help &e>>&3 Opens Help Menu'
 Help-5: '&e>>&3&6/&3RC List &e>>&3 Lists Available Servers'
 Help-6: '&e>>&3&6/&3RC Debug &7[&3True&6/&3False&7]&3 &e>>&3 Switches Debug setting to true or false'
+
+Help-Menu-Title-2: '&e>>&3Remote Broadcasts Help Menu'
+Help-7: '&e>>&3&6/&3RB &7[&3Server&7]&3 &7[&3Broadcast&7]&3 &e>>&3 Runs Command to External Servers'
+Help-8: '&e>>&3&6/&3RB SendAll &e>>&3 Sends Broadcast to all Servers'
+Help-9: '&e>>&3&6/&3RB Reload &e>>&3 Reloads the Plugin'
+Help-10: '&e>>&3&6/&3RB Help &e>>&3 Opens Help Menu'
+Help-11: '&e>>&3&6/&3RB List &e>>&3 Lists Available Servers'
+Help-12: '&e>>&3&6/&3RB Debug &7[&3True&6/&3False&7]&3 &e>>&3 Switches Debug setting to true or false'
 
 #
 # Below are the Error Messages

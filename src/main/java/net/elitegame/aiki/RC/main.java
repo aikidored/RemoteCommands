@@ -61,13 +61,13 @@ public class main extends JavaPlugin
 	int Port = 4000; // This Temporarily Sets This Plugins Listener Port.
     int listCount = 100; // Defines Array Sizes for Servers
     static boolean Debug = false; // Debug Value Default as False
-    double Version = 2.0;	// Current Version Number
+    double Version = 3.0;	// Current Version Number
     double ConfigV = Version; // Temporarily Set as Current Version. Changed to Value in Config After Config Loaded 
     static String serverName = " "; // Temporarily Set as Blank. Changed To Value in Config
     boolean pluginStarted = false; 
     
     //####   Messages Variables   ####
-    String[] PM = new String[18]; // Array Contains All Messages Defined in Messages.yml
+    static String[] PM = new String[26]; // Array Contains All Messages Defined in Messages.yml
     
     //####   Servers Variables   ####
 	String ServerList[]; //Array containing List of the names of servers listed in the Servers.yml
@@ -98,7 +98,7 @@ public class main extends JavaPlugin
     public void onEnable() {    // Displays Enable Message 
 		loadPlugin();
     	System.out.println("########################"); 
-    	System.out.println("# Remote Commands v2.3 #");
+    	System.out.println("# Remote Commands v3.0 #");
     	System.out.println("########################");
     	System.out.println("[Remote Commands] Made by Aikidored");
     }
@@ -106,7 +106,7 @@ public class main extends JavaPlugin
     public void onDisable() {
         // Displays Disable Message
     	System.out.println( "########################"); 
-    	System.out.println( "# Remote Commands v2.3 #");
+    	System.out.println( "# Remote Commands v3.0 #");
     	System.out.println( "########################");
     	System.out.println("[Remote Commands] Made by Aikidored");
     }	
@@ -191,118 +191,154 @@ public class main extends JavaPlugin
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) throws IndexOutOfBoundsException{
     	if(args.length != 0) {
-    	   	String Argument0 = args[0];
-    	   	String Command;
-    		boolean checkBool = false;
-    		argArray = new String[args.length];	
-    		for(int h = 0; h < args.length-1; h++) {
-    			argArray[h] = args[h+1];
-    		}
-    		argArray[argArray.length-1] = " ";
-        	Command = String.join(" ", argArray);
+    		if (label.equalsIgnoreCase("RC") == true) {
+        	   	String Argument0 = args[0];
+        	   	String Command;
+        		boolean checkBool = false;
+        		argArray = new String[args.length];	
+        		for(int h = 0; h < args.length-1; h++) {
+        			argArray[h] = args[h+1];
+        		}
+        		argArray[argArray.length-1] = " ";
+            	Command = String.join(" ", argArray);
 
-    		String DebugMessage = String.join(" ", args); 
-    		String DebugServerlist = String.join(" ", ServerList); 
-    		String DebugServerAddress = String.join(" ", ServerAddresses);
-    		String DebugServerPorts = StringUtils.join(ArrayUtils.toObject(ServerPorts), " - ");
-    		debug("[Remote Commands][Debug] CommandArgument: "+ Argument0);
-    		debug("[Remote Commands][Debug] Label: "+ label);
-    		debug("[Remote Commands][Debug] Server List:" + DebugServerlist);
-    		debug("[Remote Commands][Debug] Server Address:" + DebugServerAddress);
-    		debug("[Remote Commands][Debug] Server Ports:" + DebugServerPorts);
-    		debug("[Remote Commands][Debug] Message: "+DebugMessage);
-    		
-    		boolean checkServerWithinArray = checkArray(Argument0);
-    		if(Argument0.equalsIgnoreCase("Reload") == true) {
-    			checkBool = Reload(sender);
-    		}
-    		else if (Argument0.equalsIgnoreCase("Help")) {
-    			checkBool = Help(sender);
-    		}
-    		else if (Argument0.equalsIgnoreCase("List")) {
-    			checkBool = list(sender);
-    		}
-    		else if (Argument0.equalsIgnoreCase("Debug")) {
-    			if(argArray[1].equalsIgnoreCase("True")) {
-    				System.out.println("[Remote Commands] Debug Stream On");
-    				sender.sendMessage("[Remote Commands] Debug Stream On");
-    				Debug = true;
-    			} else if (argArray[1].equalsIgnoreCase("False")) {
-    				System.out.println("[Remote Commands] Debug Stream Off");
-    				sender.sendMessage("[Remote Commands] Debug Stream Off");
-    				Debug = false;
-    			} else {
-    				checkBool = Help(sender);
-    			}
-    			checkBool = true; 
-    		}
-    		else if (argArray.length < 2) {
-    			sender.sendMessage("[Remote Commands][Error] More Arguments Required");
-    			checkBool = Help(sender);
-    		}
-    		else if (Argument0.equalsIgnoreCase(serverName) == true) {
-    			checkBool = true;
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Command);
-    	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-    	    	logSendToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent ["+Command+"] to ["+Argument0+"]");
-    		}
-    		else if (Argument0.equalsIgnoreCase("SendAll") == true) {
-    			checkBool = SendAll(sender, Command);
-    		}
-    		else if(checkServerWithinArray == true) {
-    			checkBool = sendCommand(sender, Argument0, Command);
+        		String DebugMessage = String.join(" ", args); 
+        		String DebugServerlist = String.join(" ", ServerList); 
+        		String DebugServerAddress = String.join(" ", ServerAddresses);
+        		String DebugServerPorts = StringUtils.join(ArrayUtils.toObject(ServerPorts), " - ");
+        		debug("[Remote Commands][Debug] CommandArgument: "+ Argument0);
+        		debug("[Remote Commands][Debug] Label: "+ label);
+        		debug("[Remote Commands][Debug] Server List:" + DebugServerlist);
+        		debug("[Remote Commands][Debug] Server Address:" + DebugServerAddress);
+        		debug("[Remote Commands][Debug] Server Ports:" + DebugServerPorts);
+        		debug("[Remote Commands][Debug] Message: "+DebugMessage);
+        		
+        		boolean checkServerWithinArray = checkArray(Argument0);
+        		if(Argument0.equalsIgnoreCase("Reload") == true) {
+        			checkBool = Reload(sender);
+        		}
+        		else if (Argument0.equalsIgnoreCase("Help")) {
+        			checkBool = HelpCommand(sender);
+        		}
+        		else if (Argument0.equalsIgnoreCase("List")) {
+        			checkBool = list(sender);
+        		}
+        		else if (Argument0.equalsIgnoreCase("Debug")) {
+        			if(argArray[1].equalsIgnoreCase("True")) {
+        				System.out.println("[Remote Commands] Debug Stream On");
+        				sender.sendMessage("[Remote Commands] Debug Stream On");
+        				Debug = true;
+        			} else if (argArray[1].equalsIgnoreCase("False")) {
+        				System.out.println("[Remote Commands] Debug Stream Off");
+        				sender.sendMessage("[Remote Commands] Debug Stream Off");
+        				Debug = false;
+        			} else {
+        				checkBool = HelpCommand(sender);
+        			}
+        			checkBool = true; 
+        		}
+        		else if (argArray.length < 2) {
+        			sender.sendMessage("[Remote Commands][Error] More Arguments Required");
+        			checkBool = HelpCommand(sender);
+        		}
+        		else if (Argument0.equalsIgnoreCase(serverName) == true) {
+        			checkBool = true;
+    				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Command);
+        	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        	    	logSendToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent ["+Command+"] to ["+Argument0+"]");
+        		}
+        		else if (Argument0.equalsIgnoreCase("SendAll") == true) {
+        			checkBool = SendAll(sender, Command);
+        		}
+        		else if(checkServerWithinArray == true) {
+        			checkBool = sendCommand(sender, Argument0, Command);
+        		} else {
+        			sender.sendMessage("[Remote Commands][Error] Command Not Recognized. Displaying Help Menu");
+        			checkBool = HelpCommand(sender);
+        		} 
+        		return checkBool;
+    		} else if (label.equalsIgnoreCase("RB") == true) {
+        	   	String Argument0 = args[0];
+        	   	String Broadcast;
+        		boolean checkBool = false;
+        		argArray = new String[args.length];	
+        		for(int h = 0; h < args.length-1; h++) {
+        			argArray[h] = args[h+1];
+        		}
+        		argArray[argArray.length-1] = " ";
+            	Broadcast = String.join(" ", argArray);
+
+        		String DebugMessage = String.join(" ", args); 
+        		String DebugServerlist = String.join(" ", ServerList); 
+        		String DebugServerAddress = String.join(" ", ServerAddresses);
+        		String DebugServerPorts = StringUtils.join(ArrayUtils.toObject(ServerPorts), " - ");
+        		debug("[Remote Commands][Debug] CommandArgument: "+ Argument0);
+        		debug("[Remote Commands][Debug] Label: "+ label);
+        		debug("[Remote Commands][Debug] Server List:" + DebugServerlist);
+        		debug("[Remote Commands][Debug] Server Address:" + DebugServerAddress);
+        		debug("[Remote Commands][Debug] Server Ports:" + DebugServerPorts);
+        		debug("[Remote Commands][Debug] Message: "+DebugMessage);
+        		
+        		boolean checkServerWithinArray = checkArray(Argument0);
+        		if(Argument0.equalsIgnoreCase("Reload") == true) {
+        			checkBool = Reload(sender);
+        		}
+        		else if (Argument0.equalsIgnoreCase("Help")) {
+        			checkBool = HelpBroadcast(sender);
+        		}
+        		else if (Argument0.equalsIgnoreCase("List")) {
+        			checkBool = list(sender);
+        		}
+        		else if (Argument0.equalsIgnoreCase("Debug")) {
+        			if (argArray.length == 1) {
+            			if(argArray[1].equalsIgnoreCase("True")) {
+            				System.out.println("[Remote Commands] Debug Stream On");
+            				sender.sendMessage("[Remote Commands] Debug Stream On");
+            				Debug = true;
+            			} else if (argArray[1].equalsIgnoreCase("False")) {
+            				System.out.println("[Remote Commands] Debug Stream Off");
+            				sender.sendMessage("[Remote Commands] Debug Stream Off");
+            				Debug = false;
+            			} else {
+            				checkBool = HelpBroadcast(sender);
+            			}
+        			}
+        			checkBool = true; 
+        		}
+        		else if (argArray.length < 2) {
+        			sender.sendMessage("[Remote Commands][Error] More Arguments Required");
+        			checkBool = HelpBroadcast(sender);
+        		}
+        		else if (Argument0.equalsIgnoreCase(serverName) == true) {
+        			checkBool = true;
+    				Bukkit.broadcastMessage(PM[18] + Broadcast);
+        	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        	    	logSendToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent ["+Broadcast+"] to ["+Argument0+"]");
+        		}
+        		else if (Argument0.equalsIgnoreCase("SendAll") == true) {
+        			checkBool = SendAll(sender, Broadcast);
+        		}
+        		else if(checkServerWithinArray == true) {
+        			checkBool = sendBroadcast(sender, Argument0, Broadcast);
+        		} else {
+        			sender.sendMessage("[Remote Commands][Error] Command Not Recognized. Displaying Help Menu");
+        			checkBool = HelpBroadcast(sender);
+        		} 
+        		return checkBool;
     		} else {
-    			sender.sendMessage("[Remote Commands][Error] Command Not Recognized. Displaying Help Menu");
-    			checkBool = Help(sender);
-    		} 
-    		return checkBool;
+    			return false;
+    		}
     	}
     	else {
-    	    return Help(sender);
+    	    return HelpCommand(sender);
     	}
 	   	
 
     }
-    
-    
     //#####################################################################################
-  	//                   Command Methods
-  	//#####################################################################################   
-    
-    
-    public boolean Help(CommandSender sender) {
-    	sender.sendMessage(PM[4]);
-    	sender.sendMessage(PM[5]); 
-    	sender.sendMessage(PM[6]);
-    	sender.sendMessage(PM[7]);
-    	sender.sendMessage(PM[8]);
-    	sender.sendMessage(PM[9]);
-    	sender.sendMessage(PM[10]);
-    	return true;
-    }
-    public boolean Reload(CommandSender sender) {
-    	loadPlugin();
-    	debug("[Remote Commands][Client] Reload Completed.");   
-    	sender.sendMessage(PM[0]+PM[17]);
-    	return true;
-    }
-    public boolean SendAll(CommandSender sender, String Command) {
-    	boolean check = false;
-    	for (int u = 0; u< ServerList.length; u++) {
-    		check = sendCommand(sender, ServerList[u], Command);
-    	}
-    	return check;
-    }
-    public boolean list(CommandSender sender) {
-    	sender.sendMessage(PM[0]+PM[16]);
-    	for (int h = 0; h < ServerList.length; h++) {
-    		int i = h+1;
-    		sender.sendMessage(i + ". " + ServerList[h]);
-    	}
-    	return true;
-    }
-    
-    public boolean sendCommand(CommandSender sender, String Server, String Command) {
+  	//                   Test Client
+  	//##################################################################################### 
+    public boolean sendTest(CommandSender sender, String Server, String Command) {
 		String Sender = sender.toString();
 		int serverIndex = getIndex(Server); 
 		String Passkey = t.getEncryptedKey(getConfigPassKey());
@@ -315,24 +351,89 @@ public class main extends JavaPlugin
 			e.printStackTrace();   //Catches Error
 		}
 	   	debug("[Remote Commands][Debug][Client] Variables Registered:||Player:"+Sender+" ||Command:" + Command +"  ||Server:"+ Server +"  ||IP:"+ ServerIP  +":"+ serverPort); 
-   		startClientSocket(ServerIP, serverPort, sender, Sender, Server,  Passkey, Command);
+   		startBroadcastClientSocket(ServerIP, serverPort, sender, Sender, Server,  Passkey, Command);
     	return true;
     }
-    public void startListenerSocket(int Port){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
-		try {
-            Thread t = new GreetingServer(Port); //Creates new Asynchronous Thread for Listener
-            t.start();
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-    }
-    public void startClientSocket(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
+    public void startTestClientSocket(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
     	new Thread(() -> {
-    	    GreetingsClient(Server, port, sender, Sender, remoteServer, PassKey, Command);
+    	    TestClient(Server, port, sender, Sender, remoteServer, PassKey, Command);
     	}).start();
     }
 
-    public void GreetingsClient(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command) { //Connects to GreetingServer listener on other server. issues Command. Displays response from GreetingServer.
+    public void TestClient(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command) { //Connects to GreetingServer listener on other server. issues Command. Displays response from GreetingServer.
+    	//## Method Variable Declaration ##
+		String Incoming;
+		
+		//## Attempting Connection ##w
+    	try {
+    		//## Declaring Data In/Out Streams ##
+    		Socket client = new Socket(Server, port);    		
+    		debug( "[Remote Commands][Debug][Client] Established Connection to "+remoteServer+" at IP: "+ client.getRemoteSocketAddress());
+    		OutputStream outToServer = client.getOutputStream(); //declares output Stream    		
+    		DataOutputStream out = new DataOutputStream(outToServer); //declares output stream Variable
+    		InputStream inFromServer = client.getInputStream(); //declares input stream
+    		DataInputStream in = new DataInputStream(inFromServer); //declares inputstream variable 
+    		
+    		//## Communicating with Remote Server ##
+    		
+    		out.writeUTF(PassKey); //Converts Command to Data and Outputs Stream
+    		Incoming = in.readUTF();
+    		if (Incoming.equals("True")) {
+    			out.writeUTF("Broadcast");
+    			out.writeUTF(serverName);
+    			out.writeUTF(Sender);
+    			out.writeUTF(Command);
+    			sender.sendMessage(PM[0]+PM[3]);
+    			debug("[Remote Commands][Debug][Client] "+Sender+" Sent "+Command+" to "+remoteServer);
+    	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+    	    	logSendToFile("["+timeStamp+"][Send] Player ["+Sender+"] Sent ["+Command+"] to ["+remoteServer+"]");
+    		} else if (Incoming.equalsIgnoreCase("Invalid Passkey")){
+    			sender.sendMessage(PM[0]+PM[14]);
+    			System.out.println("[Remote Commands][Client][Error] A Broadcast Was Rejected by "+remoteServer+" For an Invalid Passkey");
+    	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+    	    	logSendToFile("["+timeStamp+"][Error] "+remoteServer+" Denied Connection for an Invalid Passkey");
+    			
+    		} else {
+    			sender.sendMessage(PM[0]+PM[13]);
+    			System.out.println("[Remote Commands][Client][Error] A Broadcast Was Rejected by "+remoteServer);  
+    			System.out.println("[Remote Commands][Client][Error] Please Contact Aikidored at https://discord.gg/RYTfade. Your Error Code is [01]");  			
+    		}
+    		//## Closes Connection ##
+    		client.close(); //Closes Client Socket to allow for remote server to accept new connections
+    	} catch (IOException e) {
+			sender.sendMessage(PM[0]+PM[15]);    		
+    		System.out.println("[Remote Commands][Client][Error] Could not connect to "+remoteServer);
+    		System.out.println("[Remote Commands][Client][Error] Please check is remote server is online and configured Properly");
+	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+	    	logErrorToFile("["+timeStamp+"] Could Not connect to "+remoteServer+" at: "+Server.toString()+":"+port);
+    	}
+    }
+    //#####################################################################################
+  	//                   Broadcast Methods
+  	//##################################################################################### 
+    public boolean sendBroadcast(CommandSender sender, String Server, String Command) {
+		String Sender = sender.toString();
+		int serverIndex = getIndex(Server); 
+		String Passkey = t.getEncryptedKey(getConfigPassKey());
+	    String ServerIPString = GetServerIp(serverIndex); 
+	   	int serverPort = GetServerPort(serverIndex);
+	   	InetAddress ServerIP = null; 
+		try {
+			ServerIP = InetAddress.getByName(ServerIPString); 
+		} catch (UnknownHostException e) {
+			e.printStackTrace();   //Catches Error
+		}
+	   	debug("[Remote Commands][Debug][Client] Variables Registered:||Player:"+Sender+" ||Command:" + Command +"  ||Server:"+ Server +"  ||IP:"+ ServerIP  +":"+ serverPort); 
+   		startBroadcastClientSocket(ServerIP, serverPort, sender, Sender, Server,  Passkey, Command);
+    	return true;
+    }
+    public void startBroadcastClientSocket(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
+    	new Thread(() -> {
+    	    BroadcastClient(Server, port, sender, Sender, remoteServer, PassKey, Command);
+    	}).start();
+    }
+
+    public void BroadcastClient(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command) { //Connects to GreetingServer listener on other server. issues Command. Displays response from GreetingServer.
     	//## Method Variable Declaration ##
 		String Incoming;
 		
@@ -351,6 +452,84 @@ public class main extends JavaPlugin
     		out.writeUTF(PassKey); //Converts Command to Data and Outputs Stream
     		Incoming = in.readUTF();
     		if (Incoming.equals("True")) {
+    			out.writeUTF("Broadcast");
+    			out.writeUTF(serverName);
+    			out.writeUTF(Sender);
+    			out.writeUTF(Command);
+    			sender.sendMessage(PM[0]+PM[3]);
+    			debug("[Remote Commands][Debug][Client] "+Sender+" Sent "+Command+" to "+remoteServer);
+    	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+    	    	logSendToFile("["+timeStamp+"][Send] Player ["+Sender+"] Sent ["+Command+"] to ["+remoteServer+"]");
+    		} else if (Incoming.equalsIgnoreCase("Invalid Passkey")){
+    			sender.sendMessage(PM[0]+PM[14]);
+    			System.out.println("[Remote Commands][Client][Error] A Broadcast Was Rejected by "+remoteServer+" For an Invalid Passkey");
+    	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+    	    	logSendToFile("["+timeStamp+"][Error] "+remoteServer+" Denied Connection for an Invalid Passkey");
+    			
+    		} else {
+    			sender.sendMessage(PM[0]+PM[13]);
+    			System.out.println("[Remote Commands][Client][Error] A Broadcast Was Rejected by "+remoteServer);  
+    			System.out.println("[Remote Commands][Client][Error] Please Contact Aikidored at https://discord.gg/RYTfade. Your Error Code is [01]");  			
+    		}
+    		//## Closes Connection ##
+    		client.close(); //Closes Client Socket to allow for remote server to accept new connections
+    	} catch (IOException e) {
+			sender.sendMessage(PM[0]+PM[15]);    		
+    		System.out.println("[Remote Commands][Client][Error] Could not connect to "+remoteServer);
+    		System.out.println("[Remote Commands][Client][Error] Please check is remote server is online and configured Properly");
+	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+	    	logErrorToFile("["+timeStamp+"] Could Not connect to "+remoteServer+" at: "+Server.toString()+":"+port);
+    	}
+    }
+    
+    //#####################################################################################
+  	//                   Command Methods
+  	//#####################################################################################   
+    
+    
+    
+    public boolean sendCommand(CommandSender sender, String Server, String Command) {
+		String Sender = sender.toString();
+		int serverIndex = getIndex(Server); 
+		String Passkey = t.getEncryptedKey(getConfigPassKey());
+	    String ServerIPString = GetServerIp(serverIndex); 
+	   	int serverPort = GetServerPort(serverIndex);
+	   	InetAddress ServerIP = null; 
+		try {
+			ServerIP = InetAddress.getByName(ServerIPString); 
+		} catch (UnknownHostException e) {
+			e.printStackTrace();   //Catches Error
+		}
+	   	debug("[Remote Commands][Debug][Client] Variables Registered:||Player:"+Sender+" ||Command:" + Command +"  ||Server:"+ Server +"  ||IP:"+ ServerIP  +":"+ serverPort); 
+   		startCommandClientSocket(ServerIP, serverPort, sender, Sender, Server,  Passkey, Command);
+    	return true;
+    }
+    public void startCommandClientSocket(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
+    	new Thread(() -> {
+    	    CommandClient(Server, port, sender, Sender, remoteServer, PassKey, Command);
+    	}).start();
+    }
+
+    public void CommandClient(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command) { //Connects to GreetingServer listener on other server. issues Command. Displays response from GreetingServer.
+    	//## Method Variable Declaration ##
+		String Incoming;
+		
+		//## Attempting Connection ##
+    	try {
+    		//## Declaring Data In/Out Streams ##
+    		Socket client = new Socket(Server, port);    		
+    		debug( "[Remote Commands][Debug][Client] Established Connection to "+remoteServer+" at IP: "+ client.getRemoteSocketAddress());
+    		OutputStream outToServer = client.getOutputStream(); //declares output Stream    		
+    		DataOutputStream out = new DataOutputStream(outToServer); //declares output stream Variable
+    		InputStream inFromServer = client.getInputStream(); //declares input stream
+    		DataInputStream in = new DataInputStream(inFromServer); //declares input stream variable 
+    		
+    		//## Communicating with Remote Server ##
+    		
+    		out.writeUTF(PassKey); //Converts Command to Data and Outputs Stream
+    		Incoming = in.readUTF();
+    		if (Incoming.equals("True")) {
+    			out.writeUTF("Command");
     			out.writeUTF(serverName);
     			out.writeUTF(Sender);
     			out.writeUTF(Command);
@@ -408,7 +587,57 @@ public class main extends JavaPlugin
     	debug("[Remote Commands][Debug] Command: "+Command);
     	
     }
-    
+    public void startListenerSocket(int Port){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
+		try {
+            Thread t = new Server(Port); //Creates new Asynchronous Thread for Listener
+            t.start();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+    }
+
+    public boolean HelpCommand(CommandSender sender) {
+    	sender.sendMessage(PM[4]);
+    	sender.sendMessage(PM[5]); 
+    	sender.sendMessage(PM[6]);
+    	sender.sendMessage(PM[7]);
+    	sender.sendMessage(PM[8]);
+    	sender.sendMessage(PM[9]);
+    	sender.sendMessage(PM[10]);
+    	return true;
+    }
+
+    public boolean HelpBroadcast(CommandSender sender) {
+    	sender.sendMessage(PM[4]);
+    	sender.sendMessage(PM[5]); 
+    	sender.sendMessage(PM[6]);
+    	sender.sendMessage(PM[7]);
+    	sender.sendMessage(PM[8]);
+    	sender.sendMessage(PM[9]);
+    	sender.sendMessage(PM[10]);
+    	return true;
+    }
+    public boolean Reload(CommandSender sender) {
+    	loadPlugin();
+    	debug("[Remote Commands][Client] Reload Completed.");   
+    	sender.sendMessage(PM[0]+PM[17]);
+    	return true;
+    }
+    public boolean SendAll(CommandSender sender, String Command) {
+    	boolean check = false;
+    	for (int u = 0; u< ServerList.length; u++) {
+    		check = sendCommand(sender, ServerList[u], Command);
+    	}
+    	return check;
+    }
+    public boolean list(CommandSender sender) {
+    	sender.sendMessage(PM[0]+PM[16]);
+    	for (int h = 0; h < ServerList.length; h++) {
+    		int i = h+1;
+    		sender.sendMessage(i + ". " + ServerList[h]);
+    	}
+    	return true;
+    }
     //#####################################################################################
   	//                   Get Data from Array Methods
   	//#####################################################################################
@@ -449,7 +678,7 @@ public class main extends JavaPlugin
     
     public void loadMessages() {
     	debug("[Remote Commands][Debug] Loading Messages");
-    	PM[0] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Prefix"));
+    	PM[0] = ChatColor.translateAlternateColorCodes('&', Messages.getString("CommandPrefix"));
     	PM[1] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-On"));
     	PM[2] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-Off"));
     	PM[3] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Sender-Confirmation"));
@@ -467,6 +696,14 @@ public class main extends JavaPlugin
     	PM[15] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Connection-Error"));
     	PM[16] = ChatColor.translateAlternateColorCodes('&', Messages.getString("RC-Server-List"));
     	PM[17] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Plugin-Reload"));
+    	PM[18] = ChatColor.translateAlternateColorCodes('&', Messages.getString("BroadcastPrefix"));
+    	PM[19] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-Menu-Title-2"));
+    	PM[20] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-7"));
+    	PM[21] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-8"));
+    	PM[22] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-9"));
+    	PM[23] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-10"));
+    	PM[24] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-11"));
+    	PM[25] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-12"));
     	debug("[Remote Commands][Debug][Message]Prefix: "+PM[0]);
     	debug("[Remote Commands][Debug][Message]Debug-On: "+PM[1]);
     	debug("[Remote Commands][Debug][Message]Debug-Off: "+PM[2]);

@@ -1,5 +1,6 @@
 #
 # Plugin made by Aikidored
+# Discord Support Link: https://discord.gg/RYTfade
 #
 
 #
@@ -8,31 +9,38 @@
 #
 
 # Version Information:
-# Dont Change these Values Unless you know what you are doing.
-Config-Version: 2.0
+# Do NOT Change these Values. 
+Config-Version: 3.0
 
 # Debug Options:
-# Outputs General Debug Information while plugin is Performing actions
+# Outputs Information about Plugin as it is performing Actions.
+# This will flood Console with Messages when active.
+# Accepts Boolean Value
+# Default is False.
 Debug: false
 
 # Server Name:
-# Informs Server that are sent Commands Which Server is sending the Command
-Server-Name: ThisServer
+# Used as Server Identifier when Communicating
+# Accepts String Value
+Server-Name: Server1
 
 # The Pass Key is used to protect against rogue commands being sent to your server.
 # All Servers using RemoteCommands must use the same PassKey or Connections will be Denied
 # Passkey Must be a Positive Number between 3-6 Digits
 # PassKey is sent with a Basic Encryption to Protect your Server
+# Accepts Int Value
 PassKey: 123456
 
 
 # The Port-Listener defines what port listeners uses.
-# This value must different from any other ports being used on servers computer. 
+# This value must different from any other ports being used on servers computer.
+# Accepts Int Value 
 Port-Listener: 4000
 
-# Below is where you define your servers, the address for them, and the port they listen on.
-# Server-Count is where you tell the plugin how many servers you have listed below 
+# Server Count:
+# Number of Servers to Identify.
 # If this value is not correct. the Plugin will not Initialize.
 # There is a Maximum of 100 servers you can list. Contact me if you need more
+# Accepts Int Value
 Server-Count: 4
 # To make sure you get the right count, Look at your last server and add 1

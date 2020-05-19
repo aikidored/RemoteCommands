@@ -1,33 +1,35 @@
 #
 # Plugin made by Aikidored
+# Discord Support Link: https://discord.gg/RYTfade
 #
 
 #
-# Remote Commands Message Customization List 
+# Plugin Message Customization List 
 # These messages are sent to the Player
 # These do not include any Debug Messages in Console
+# ONLY CHANGE AFTER THE SEMI-COLON!!
 #
 
 # This Prefix shows before any of the below messages.
-CommandPrefix: '&7[&3&lRC&7]' 
-BroadcastPrefix: '&7[&3&lRC&7]' # Shown Before Any Broadcasts 
+CommandPrefix: '&7[&3&lRC&7]' # Shown Before Any Commands
+BroadcastPrefix: '&7[&3&lRB&7]' # Shown Before Any Broadcasts 
 
-# Shown when turnin on debug mode
+# Shown when Debug is Enabled by Command
 Debug-On: '&e>>&3 Debug On'
 
-# Shown when turning off debug mode
+# Shown when Debug is Disabled by Command
 Debug-Off: '&e>>&3 Debug Off'
 
 # Shown when reloading the plugin
 Plugin-Reload: '&e>>&3 Plugin Reloaded'
 
-# Message sent to command sender when remote server verifies command received
+# Message Sent Confirmation 
 Sender-Confirmation: '&e>>&3 Command Sent'
 
 # Title of Server list
 RC-Server-List: '&e>>&3 Server List '
 
-# Below is the Help Menu Options
+# Command Help Messages
 Help-Menu-Title: '&e>>&3Remote Commands Help Menu'
 Help-1: '&e>>&3&6/&3RC &7[&3Server&7]&3 &7[&3Command&7]&3 &e>>&3 Runs Command to External Servers'
 Help-2: '&e>>&3&6/&3RC SendAll &e>>&3 Sends Command to all Servers'
@@ -36,8 +38,9 @@ Help-4: '&e>>&3&6/&3RC Help &e>>&3 Opens Help Menu'
 Help-5: '&e>>&3&6/&3RC List &e>>&3 Lists Available Servers'
 Help-6: '&e>>&3&6/&3RC Debug &7[&3True&6/&3False&7]&3 &e>>&3 Switches Debug setting to true or false'
 
+# Broadcast Help Messages
 Help-Menu-Title-2: '&e>>&3Remote Broadcasts Help Menu'
-Help-7: '&e>>&3&6/&3RB &7[&3Server&7]&3 &7[&3Broadcast&7]&3 &e>>&3 Runs Command to External Servers'
+Help-7: '&e>>&3&6/&3RB &7[&3Server&7]&3 &7[&3Broadcast&7]&3 &e>>&3 Sends Broadcast to External Servers'
 Help-8: '&e>>&3&6/&3RB SendAll &e>>&3 Sends Broadcast to all Servers'
 Help-9: '&e>>&3&6/&3RB Reload &e>>&3 Reloads the Plugin'
 Help-10: '&e>>&3&6/&3RB Help &e>>&3 Opens Help Menu'

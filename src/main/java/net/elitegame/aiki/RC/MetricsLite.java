@@ -121,7 +121,7 @@ public class MetricsLite {
         serverUUID = config.getString("serverUuid");
         logFailedRequests = config.getBoolean("logFailedRequests", false);
         enabled = config.getBoolean("enabled", true);
-        if (config.getBoolean("enabled", true) == true) {
+        if (config.getBoolean("enabled", true) == false) {
         	System.out.println("#######################################");
         	System.out.println("#### Remote Commands  ####");
         	System.out.println("#### It seems you have Bstats Disabled");

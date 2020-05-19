@@ -223,20 +223,6 @@ public class main extends JavaPlugin
         		else if (Argument0.equalsIgnoreCase("List")) {
         			checkBool = list(sender);
         		}
-        		else if (Argument0.equalsIgnoreCase("Debug")) {
-        			if(argArray[1].equalsIgnoreCase("True")) {
-        				System.out.println(PM[0]+PM[1]);
-        				sender.sendMessage(PM[0]+PM[1]);
-        				Debug = true;
-        			} else if (argArray[1].equalsIgnoreCase("False")) {
-        				System.out.println(PM[0]+PM[2]);
-        				sender.sendMessage(PM[0]+PM[2]);
-        				Debug = false;
-        			} else {
-        				checkBool = HelpCommand(sender);
-        			}
-        			checkBool = true; 
-        		}
         		else if (argArray.length < 2) {
         			sender.sendMessage(PM[0]+PM[11]);
         			checkBool = HelpCommand(sender);
@@ -288,22 +274,6 @@ public class main extends JavaPlugin
         		}
         		else if (Argument0.equalsIgnoreCase("List")) {
         			checkBool = list(sender);
-        		}
-        		else if (Argument0.equalsIgnoreCase("Debug")) {
-        			if (argArray.length == 1) {
-            			if(argArray[1].equalsIgnoreCase("True")) {
-            				System.out.println(PM[0]+PM[1]);
-            				sender.sendMessage(PM[0]+PM[1]);
-            				Debug = true;
-            			} else if (argArray[1].equalsIgnoreCase("False")) {
-            				System.out.println(PM[0]+PM[2]);
-            				sender.sendMessage(PM[0]+PM[2]);
-            				Debug = false;
-            			} else {
-            				checkBool = HelpBroadcast(sender);
-            			}
-        			}
-        			checkBool = true; 
         		}
         		else if (argArray.length < 2) {
         			sender.sendMessage(PM[18]+PM[11]);
@@ -530,7 +500,7 @@ public class main extends JavaPlugin
     	sender.sendMessage(PM[7]);
     	sender.sendMessage(PM[8]);
     	sender.sendMessage(PM[9]);
-    	sender.sendMessage(PM[10]);
+    	//sender.sendMessage(PM[10]);
     	return true;
     }
 
@@ -541,7 +511,7 @@ public class main extends JavaPlugin
     	sender.sendMessage(PM[22]);
     	sender.sendMessage(PM[23]);
     	sender.sendMessage(PM[24]);
-    	sender.sendMessage(PM[25]);
+    	//sender.sendMessage(PM[25]);
     	return true;
     }
     public boolean Reload(CommandSender sender) {
@@ -606,8 +576,8 @@ public class main extends JavaPlugin
     public void loadMessages() {
     	debug("[Remote Commands][Debug] Loading Messages");
     	PM[0] = ChatColor.translateAlternateColorCodes('&', Messages.getString("CommandPrefix"));
-    	PM[1] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-On"));
-    	PM[2] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-Off"));
+    	//PM[1] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-On"));    //Removed Setting. Left Commented out as Placeholder for future expansion
+    	//PM[2] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-Off"));   //Removed Setting. Left Commented out as Placeholder for future expansion 
     	PM[3] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Sender-Confirmation"));
     	PM[4] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-Menu-Title"));
     	PM[5] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-1"));
@@ -615,7 +585,7 @@ public class main extends JavaPlugin
     	PM[7] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-3"));
     	PM[8] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-4"));
     	PM[9] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-5"));
-    	PM[10] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-6"));
+    	//PM[10] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-6"));  //Removed Setting. Left Commented out as Placeholder for future expansion
     	PM[11] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-More-Arguments-Needed"));
     	PM[12] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Displaying-Help-Menu"));
     	PM[13] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Command-Send-Misc"));
@@ -630,10 +600,10 @@ public class main extends JavaPlugin
     	PM[22] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-9"));
     	PM[23] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-10"));
     	PM[24] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-11"));
-    	PM[25] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-12"));
+    	//PM[25] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-12"));  //Removed Setting. Left Commented out as Placeholder for future expansion
     	debug("[Remote Commands][Debug][Message]Prefix: "+PM[0]);
-    	debug("[Remote Commands][Debug][Message]Debug-On: "+PM[1]);
-    	debug("[Remote Commands][Debug][Message]Debug-Off: "+PM[2]);
+    	//debug("[Remote Commands][Debug][Message]Debug-On: "+PM[1]);   //Removed Setting. Left Commented out as Placeholder for future expansion 
+    	//debug("[Remote Commands][Debug][Message]Debug-Off: "+PM[2]);  //Removed Setting. Left Commented out as Placeholder for future expansion 
     	debug("[Remote Commands][Debug][Message]Sender-Confirmation: "+PM[3]);
     	debug("[Remote Commands][Debug][Message]Help-Menu-Title: "+PM[4]);
     	debug("[Remote Commands][Debug][Message]Help-1: "+PM[5]);
@@ -641,7 +611,7 @@ public class main extends JavaPlugin
     	debug("[Remote Commands][Debug][Message]Help-3: "+PM[7]);
     	debug("[Remote Commands][Debug][Message]Help-4: "+PM[8]);
     	debug("[Remote Commands][Debug][Message]Help-5: "+PM[9]);
-    	debug("[Remote Commands][Debug][Message]Help-6: "+PM[10]);
+    	//debug("[Remote Commands][Debug][Message]Help-6: "+PM[10]);  //Removed Setting. Left Commented out as Placeholder for future expansion
     	debug("[Remote Commands][Debug][Message]Error-More-Arguments-Needed: "+PM[11]);
     	debug("[Remote Commands][Debug][Message]Error-Displaying-Help-Menu: "+PM[12]);
     	debug("[Remote Commands][Debug][Message]Error-Command-Send-Misc: "+PM[13]);
@@ -649,14 +619,14 @@ public class main extends JavaPlugin
     	debug("[Remote Commands][Debug][Message]Error-Connection-Error: "+PM[15]);
     	debug("[Remote Commands][Debug][Message]RC-Server-List: "+PM[16]);
     	debug("[Remote Commands][Debug][Message]Plugin-Reload: "+PM[17]);
-    	debug("[Remote Commands][Debug] Finished Loading Messages");
     	debug("[Remote Commands][Debug][Message]Help-Menu-Title-2: "+PM[19]);
     	debug("[Remote Commands][Debug][Message]Help-7: "+PM[20]);
     	debug("[Remote Commands][Debug][Message]Help-8: "+PM[21]);
     	debug("[Remote Commands][Debug][Message]Help-9: "+PM[22]);
     	debug("[Remote Commands][Debug][Message]Help-10: "+PM[23]);
     	debug("[Remote Commands][Debug][Message]Help-11: "+PM[24]);
-    	debug("[Remote Commands][Debug][Message]Help-12: "+PM[25]);
+    	//debug("[Remote Commands][Debug][Message]Help-12: "+PM[25]);  //Removed Setting. Left Commented out as Placeholder for future expansion
+    	debug("[Remote Commands][Debug] Finished Loading Messages");
     }
     
     //#####################################################################################

@@ -225,12 +225,12 @@ public class main extends JavaPlugin
         		}
         		else if (Argument0.equalsIgnoreCase("Debug")) {
         			if(argArray[1].equalsIgnoreCase("True")) {
-        				System.out.println("[Remote Commands] Debug Stream On");
-        				sender.sendMessage("[Remote Commands] Debug Stream On");
+        				System.out.println(PM[0]+PM[1]);
+        				sender.sendMessage(PM[0]+PM[1]);
         				Debug = true;
         			} else if (argArray[1].equalsIgnoreCase("False")) {
-        				System.out.println("[Remote Commands] Debug Stream Off");
-        				sender.sendMessage("[Remote Commands] Debug Stream Off");
+        				System.out.println(PM[0]+PM[2]);
+        				sender.sendMessage(PM[0]+PM[2]);
         				Debug = false;
         			} else {
         				checkBool = HelpCommand(sender);
@@ -238,14 +238,14 @@ public class main extends JavaPlugin
         			checkBool = true; 
         		}
         		else if (argArray.length < 2) {
-        			sender.sendMessage("[Remote Commands][Error] More Arguments Required");
+        			sender.sendMessage(PM[0]+PM[11]);
         			checkBool = HelpCommand(sender);
         		}
         		else if (Argument0.equalsIgnoreCase(serverName) == true) {
         			checkBool = true;
     				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Command);
         	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-        	    	logSendToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent ["+Command+"] to ["+Argument0+"]");
+        	    	logSendToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent Command:["+Command+"] to ["+Argument0+"]");
         		}
         		else if (Argument0.equalsIgnoreCase("SendAll") == true) {
         			checkBool = SendAll(sender, Command);
@@ -253,7 +253,7 @@ public class main extends JavaPlugin
         		else if(checkServerWithinArray == true) {
         			checkBool = sendCommand(sender, Argument0, Command);
         		} else {
-        			sender.sendMessage("[Remote Commands][Error] Command Not Recognized. Displaying Help Menu");
+        			sender.sendMessage(PM[0]+PM[12]);
         			checkBool = HelpCommand(sender);
         		} 
         		return checkBool;
@@ -292,12 +292,12 @@ public class main extends JavaPlugin
         		else if (Argument0.equalsIgnoreCase("Debug")) {
         			if (argArray.length == 1) {
             			if(argArray[1].equalsIgnoreCase("True")) {
-            				System.out.println("[Remote Commands] Debug Stream On");
-            				sender.sendMessage("[Remote Commands] Debug Stream On");
+            				System.out.println(PM[0]+PM[1]);
+            				sender.sendMessage(PM[0]+PM[1]);
             				Debug = true;
             			} else if (argArray[1].equalsIgnoreCase("False")) {
-            				System.out.println("[Remote Commands] Debug Stream Off");
-            				sender.sendMessage("[Remote Commands] Debug Stream Off");
+            				System.out.println(PM[0]+PM[2]);
+            				sender.sendMessage(PM[0]+PM[2]);
             				Debug = false;
             			} else {
             				checkBool = HelpBroadcast(sender);
@@ -306,14 +306,14 @@ public class main extends JavaPlugin
         			checkBool = true; 
         		}
         		else if (argArray.length < 2) {
-        			sender.sendMessage("[Remote Commands][Error] More Arguments Required");
+        			sender.sendMessage(PM[18]+PM[11]);
         			checkBool = HelpBroadcast(sender);
         		}
         		else if (Argument0.equalsIgnoreCase(serverName) == true) {
         			checkBool = true;
     				Bukkit.broadcastMessage(PM[18] + Broadcast);
         	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-        	    	logSendToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent ["+Broadcast+"] to ["+Argument0+"]");
+        	    	logSendToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent Broadcast:["+Broadcast+"] to ["+Argument0+"]");
         		}
         		else if (Argument0.equalsIgnoreCase("SendAll") == true) {
         			checkBool = SendAll(sender, Broadcast);
@@ -321,7 +321,7 @@ public class main extends JavaPlugin
         		else if(checkServerWithinArray == true) {
         			checkBool = sendBroadcast(sender, Argument0, Broadcast);
         		} else {
-        			sender.sendMessage("[Remote Commands][Error] Command Not Recognized. Displaying Help Menu");
+        			sender.sendMessage(PM[18]+PM[12]);
         			checkBool = HelpBroadcast(sender);
         		} 
         		return checkBool;
@@ -334,79 +334,6 @@ public class main extends JavaPlugin
     	}
 	   	
 
-    }
-    //#####################################################################################
-  	//                   Test Client
-  	//##################################################################################### 
-    public boolean sendTest(CommandSender sender, String Server, String Command) {
-		String Sender = sender.toString();
-		int serverIndex = getIndex(Server); 
-		String Passkey = t.getEncryptedKey(getConfigPassKey());
-	    String ServerIPString = GetServerIp(serverIndex); 
-	   	int serverPort = GetServerPort(serverIndex);
-	   	InetAddress ServerIP = null; 
-		try {
-			ServerIP = InetAddress.getByName(ServerIPString); 
-		} catch (UnknownHostException e) {
-			e.printStackTrace();   //Catches Error
-		}
-	   	debug("[Remote Commands][Debug][Client] Variables Registered:||Player:"+Sender+" ||Command:" + Command +"  ||Server:"+ Server +"  ||IP:"+ ServerIP  +":"+ serverPort); 
-   		startBroadcastClientSocket(ServerIP, serverPort, sender, Sender, Server,  Passkey, Command);
-    	return true;
-    }
-    public void startTestClientSocket(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
-    	new Thread(() -> {
-    	    TestClient(Server, port, sender, Sender, remoteServer, PassKey, Command);
-    	}).start();
-    }
-
-    public void TestClient(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command) { //Connects to GreetingServer listener on other server. issues Command. Displays response from GreetingServer.
-    	//## Method Variable Declaration ##
-		String Incoming;
-		
-		//## Attempting Connection ##w
-    	try {
-    		//## Declaring Data In/Out Streams ##
-    		Socket client = new Socket(Server, port);    		
-    		debug( "[Remote Commands][Debug][Client] Established Connection to "+remoteServer+" at IP: "+ client.getRemoteSocketAddress());
-    		OutputStream outToServer = client.getOutputStream(); //declares output Stream    		
-    		DataOutputStream out = new DataOutputStream(outToServer); //declares output stream Variable
-    		InputStream inFromServer = client.getInputStream(); //declares input stream
-    		DataInputStream in = new DataInputStream(inFromServer); //declares inputstream variable 
-    		
-    		//## Communicating with Remote Server ##
-    		
-    		out.writeUTF(PassKey); //Converts Command to Data and Outputs Stream
-    		Incoming = in.readUTF();
-    		if (Incoming.equals("True")) {
-    			out.writeUTF("Broadcast");
-    			out.writeUTF(serverName);
-    			out.writeUTF(Sender);
-    			out.writeUTF(Command);
-    			sender.sendMessage(PM[0]+PM[3]);
-    			debug("[Remote Commands][Debug][Client] "+Sender+" Sent "+Command+" to "+remoteServer);
-    	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-    	    	logSendToFile("["+timeStamp+"][Send] Player ["+Sender+"] Sent ["+Command+"] to ["+remoteServer+"]");
-    		} else if (Incoming.equalsIgnoreCase("Invalid Passkey")){
-    			sender.sendMessage(PM[0]+PM[14]);
-    			System.out.println("[Remote Commands][Client][Error] A Broadcast Was Rejected by "+remoteServer+" For an Invalid Passkey");
-    	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-    	    	logSendToFile("["+timeStamp+"][Error] "+remoteServer+" Denied Connection for an Invalid Passkey");
-    			
-    		} else {
-    			sender.sendMessage(PM[0]+PM[13]);
-    			System.out.println("[Remote Commands][Client][Error] A Broadcast Was Rejected by "+remoteServer);  
-    			System.out.println("[Remote Commands][Client][Error] Please Contact Aikidored at https://discord.gg/RYTfade. Your Error Code is [01]");  			
-    		}
-    		//## Closes Connection ##
-    		client.close(); //Closes Client Socket to allow for remote server to accept new connections
-    	} catch (IOException e) {
-			sender.sendMessage(PM[0]+PM[15]);    		
-    		System.out.println("[Remote Commands][Client][Error] Could not connect to "+remoteServer);
-    		System.out.println("[Remote Commands][Client][Error] Please check is remote server is online and configured Properly");
-	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-	    	logErrorToFile("["+timeStamp+"] Could Not connect to "+remoteServer+" at: "+Server.toString()+":"+port);
-    	}
     }
     //#####################################################################################
   	//                   Broadcast Methods
@@ -456,25 +383,25 @@ public class main extends JavaPlugin
     			out.writeUTF(serverName);
     			out.writeUTF(Sender);
     			out.writeUTF(Command);
-    			sender.sendMessage(PM[0]+PM[3]);
+    			sender.sendMessage(PM[18]+PM[3]);
     			debug("[Remote Commands][Debug][Client] "+Sender+" Sent "+Command+" to "+remoteServer);
     	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
     	    	logSendToFile("["+timeStamp+"][Send] Player ["+Sender+"] Sent ["+Command+"] to ["+remoteServer+"]");
     		} else if (Incoming.equalsIgnoreCase("Invalid Passkey")){
-    			sender.sendMessage(PM[0]+PM[14]);
+    			sender.sendMessage(PM[18]+PM[14]);
     			System.out.println("[Remote Commands][Client][Error] A Broadcast Was Rejected by "+remoteServer+" For an Invalid Passkey");
     	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
     	    	logSendToFile("["+timeStamp+"][Error] "+remoteServer+" Denied Connection for an Invalid Passkey");
     			
     		} else {
-    			sender.sendMessage(PM[0]+PM[13]);
+    			sender.sendMessage(PM[18]+PM[13]);
     			System.out.println("[Remote Commands][Client][Error] A Broadcast Was Rejected by "+remoteServer);  
     			System.out.println("[Remote Commands][Client][Error] Please Contact Aikidored at https://discord.gg/RYTfade. Your Error Code is [01]");  			
     		}
     		//## Closes Connection ##
     		client.close(); //Closes Client Socket to allow for remote server to accept new connections
     	} catch (IOException e) {
-			sender.sendMessage(PM[0]+PM[15]);    		
+			sender.sendMessage(PM[18]+PM[15]);    		
     		System.out.println("[Remote Commands][Client][Error] Could not connect to "+remoteServer);
     		System.out.println("[Remote Commands][Client][Error] Please check is remote server is online and configured Properly");
 	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
@@ -608,13 +535,13 @@ public class main extends JavaPlugin
     }
 
     public boolean HelpBroadcast(CommandSender sender) {
-    	sender.sendMessage(PM[4]);
-    	sender.sendMessage(PM[5]); 
-    	sender.sendMessage(PM[6]);
-    	sender.sendMessage(PM[7]);
-    	sender.sendMessage(PM[8]);
-    	sender.sendMessage(PM[9]);
-    	sender.sendMessage(PM[10]);
+    	sender.sendMessage(PM[19]);
+    	sender.sendMessage(PM[20]); 
+    	sender.sendMessage(PM[21]);
+    	sender.sendMessage(PM[22]);
+    	sender.sendMessage(PM[23]);
+    	sender.sendMessage(PM[24]);
+    	sender.sendMessage(PM[25]);
     	return true;
     }
     public boolean Reload(CommandSender sender) {
@@ -723,6 +650,13 @@ public class main extends JavaPlugin
     	debug("[Remote Commands][Debug][Message]RC-Server-List: "+PM[16]);
     	debug("[Remote Commands][Debug][Message]Plugin-Reload: "+PM[17]);
     	debug("[Remote Commands][Debug] Finished Loading Messages");
+    	debug("[Remote Commands][Debug][Message]Help-Menu-Title-2: "+PM[19]);
+    	debug("[Remote Commands][Debug][Message]Help-7: "+PM[20]);
+    	debug("[Remote Commands][Debug][Message]Help-8: "+PM[21]);
+    	debug("[Remote Commands][Debug][Message]Help-9: "+PM[22]);
+    	debug("[Remote Commands][Debug][Message]Help-10: "+PM[23]);
+    	debug("[Remote Commands][Debug][Message]Help-11: "+PM[24]);
+    	debug("[Remote Commands][Debug][Message]Help-12: "+PM[25]);
     }
     
     //#####################################################################################

@@ -22,7 +22,7 @@ Debug: false
 # Server Name:
 # Used as Server Identifier when Communicating
 # Accepts String Value
-Server-Name: Server1
+Server-Name: Server
 
 # The Pass Key is used to protect against rogue commands being sent to your server.
 # All Servers using RemoteCommands must use the same PassKey or Connections will be Denied

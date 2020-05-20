@@ -234,7 +234,7 @@ public class main extends JavaPlugin
         	    	logSendToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent Command:["+Command+"] to ["+Argument0+"]");
         		}
         		else if (Argument0.equalsIgnoreCase("SendAll") == true) {
-        			checkBool = SendAll(sender, Command);
+        			checkBool = CSendAll(sender, Command);
         		}
         		else if(checkServerWithinArray == true) {
         			checkBool = sendCommand(sender, Argument0, Command);
@@ -286,7 +286,7 @@ public class main extends JavaPlugin
         	    	logSendToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent Broadcast:["+Broadcast+"] to ["+Argument0+"]");
         		}
         		else if (Argument0.equalsIgnoreCase("SendAll") == true) {
-        			checkBool = SendAll(sender, Broadcast);
+        			checkBool = BSendAll(sender, Broadcast);
         		}
         		else if(checkServerWithinArray == true) {
         			checkBool = sendBroadcast(sender, Argument0, Broadcast);
@@ -323,6 +323,13 @@ public class main extends JavaPlugin
 	   	debug("[Remote Commands][Debug][Client] Variables Registered:||Player:"+Sender+" ||Command:" + Command +"  ||Server:"+ Server +"  ||IP:"+ ServerIP  +":"+ serverPort); 
    		startBroadcastClientSocket(ServerIP, serverPort, sender, Sender, Server,  Passkey, Command);
     	return true;
+    }
+    public boolean BSendAll(CommandSender sender, String Command) {
+    	boolean check = false;
+    	for (int u = 0; u< ServerList.length; u++) {
+    		check = sendBroadcast(sender, ServerList[u], Command);
+    	}
+    	return check;
     }
     public void startBroadcastClientSocket(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
     	new Thread(() -> {
@@ -400,6 +407,13 @@ public class main extends JavaPlugin
 	   	debug("[Remote Commands][Debug][Client] Variables Registered:||Player:"+Sender+" ||Command:" + Command +"  ||Server:"+ Server +"  ||IP:"+ ServerIP  +":"+ serverPort); 
    		startCommandClientSocket(ServerIP, serverPort, sender, Sender, Server,  Passkey, Command);
     	return true;
+    }
+    public boolean CSendAll(CommandSender sender, String Command) {
+    	boolean check = false;
+    	for (int u = 0; u< ServerList.length; u++) {
+    		check = sendCommand(sender, ServerList[u], Command);
+    	}
+    	return check;
     }
     public void startCommandClientSocket(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey, String Command){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
     	new Thread(() -> {
@@ -519,13 +533,6 @@ public class main extends JavaPlugin
     	debug("[Remote Commands][Client] Reload Completed.");   
     	sender.sendMessage(PM[0]+PM[17]);
     	return true;
-    }
-    public boolean SendAll(CommandSender sender, String Command) {
-    	boolean check = false;
-    	for (int u = 0; u< ServerList.length; u++) {
-    		check = sendCommand(sender, ServerList[u], Command);
-    	}
-    	return check;
     }
     public boolean list(CommandSender sender) {
     	sender.sendMessage(PM[0]+PM[16]);

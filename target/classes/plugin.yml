@@ -6,10 +6,10 @@ commands:
    RC:
       description: Parent Command for Remote Commands
       usage: /RC [server / Sub-Command] [Message]
-      permission: remotecommands.use
+      permission: RemoteCommands.use
       permission-message: You don't have remotecommands.use
    RB:
       description: This is a command will Broadcast a Message of your choice to another server
       usage: /RB [server / Command] [Message]
-      permission: rb.Use
+      permission: RemoteBroadcasts.Use
       permission-message: You don't have rb.use. 

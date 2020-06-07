@@ -50,12 +50,12 @@ public class main extends JavaPlugin
 	//#####################################################################################
 	//####   Plugin Variables   ####
 	String[] argArray; // Array to Hold Commands Sent to this Plugin
-    static boolean commandWaiting = false; // Declares 
+    static boolean commandWaiting = false; // Declars whether a command was recieved and is waiting
     static String receivedCommand = " "; // Stores Received Command
     static String LoggedString = " "; // Stores Received String 
     static String[] WCL = new String[20]; //WCL = Waiting Command List. Stores Commands in queue 
     static String[] LSL = new String[20]; //LSL = Logged String List. Stores Log Messages in queue
-    static int Index = 0;
+    static int Index = 0; // Count of Waiting Commands
 	
 	//####   Config Variables   ####
 	int Port = 4000; // This Temporarily Sets This Plugins Listener Port.
@@ -64,7 +64,7 @@ public class main extends JavaPlugin
     double Version = 3.0;	// Current Version Number
     double ConfigV = Version; // Temporarily Set as Current Version. Changed to Value in Config After Config Loaded 
     static String serverName = " "; // Temporarily Set as Blank. Changed To Value in Config
-    boolean pluginStarted = false; 
+    boolean pluginStarted = false; // Prevents Port Listener from re-enabling upon reload
     
     //####   Messages Variables   ####
     static String[] PM = new String[26]; // Array Contains All Messages Defined in Messages.yml
@@ -86,7 +86,7 @@ public class main extends JavaPlugin
     public static FileConfiguration Messages;
 	
 	//####   Declarations   #####
-	Encryption t = new Encryption();
+	Encryption t = new Encryption(); // Declares Encryption Class
 	ConsoleCommandSender commandSender = Bukkit.getServer().getConsoleSender();
 	
 	
@@ -103,8 +103,7 @@ public class main extends JavaPlugin
     	System.out.println("[Remote Commands] Made by Aikidored");
     }
     @Override
-    public void onDisable() {
-        // Displays Disable Message
+    public void onDisable() {  // Displays Disable Message
     	System.out.println( "########################"); 
     	System.out.println( "# Remote Commands v3.0 #");
     	System.out.println( "########################");
@@ -116,27 +115,39 @@ public class main extends JavaPlugin
   	//#####################################################################################    
     public void loadPlugin() {
 		loadConfigFile();
-		Debug = config.getBoolean("Debug");
+		Debug = config.getBoolean("Debug"); // Gets Debug Value
 		debug("[Remote Commands][Debug] Loaded Config.yml");
 		loadServersFile();
 		debug("[Remote Commands][Debug] Checking Config.yml Version");
-		checkVersion();
-		loadMessageFile();
-		loadMessages();
-		LoadArrays();
-		startRepeatingTask();
-		Port = getConfigListenerPort();
-		StartListener(Port);
+		checkVersion(); // Checks Config Version
+		loadMessageFile(); // Loads Messages.yml
+		loadMessages(); // Gets Messages From Messages.yml
+		LoadArrays(); // Loads Server Data from Servers.yml
+		startRepeatingTask(); // Starts Repeating Task to Check for Commands
+		Port = getConfigListenerPort(); //gets Port for Listener
+		startListenerSocket(Port); // Starts Listener Port
 		int pluginId = 6397; // <-- BSTATS Value
         @SuppressWarnings("unused")// <-- BSTATS Value
 		MetricsLite metrics = new MetricsLite(this, pluginId);// <-- BSTATS Value
-        getServerName();
+    	serverName = config.getString("Server-Name");
 	}
     public void StartListener(int Port) {
     	if (pluginStarted == false) {
     		startListenerSocket(Port);
     		pluginStarted = true;
     	}
+    }
+    public void startListenerSocket(int Port){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
+    	if (pluginStarted == false) {
+			try {
+	            Thread t = new Server(Port); //Creates new Asynchronous Thread for Listener
+	            t.start();
+	         } catch (IOException e) {
+	            e.printStackTrace();
+	         }
+    		pluginStarted = true;
+    	}
+			
     }
     
     //#####################################################################################
@@ -148,7 +159,7 @@ public class main extends JavaPlugin
 			debug("[Remote Commands][Debug] Config Up to Date");
 		} else {
 			System.out.println("[Remote Commands][Warning] Config OutDated");
-			debug("[Remote Commands][Debug][Warning] Current Version is: "+Version);
+			debug("[Remote Commands][Debug][Warning] Current Config Version is: "+Version);
 			debug("[Remote Commands][Debug][Warning] Config Version is: "+ ConfigV);
 		}			
 	}
@@ -156,12 +167,12 @@ public class main extends JavaPlugin
     	int Key = config.getInt("PassKey");
     	return Key;
     }
-    public int getConfigListenerPort() { 
+    public int getConfigListenerPort() {  // Returns Listener Port from Config
     	int Port = config.getInt("Port-Listener");
     	debug("[Remote Commands][Debug] Port Retrieved from Config: "+Port);
     	return Port; 
     }
-    public void LoadArrays() { 
+    public void LoadArrays() { //Loads Server IP and Ports from Servers.yml
     	debug("[Remote Commands][Debug] Loading Servers.yml");
     	listCount = config.getInt("Server-Count"); 
     	debug("[Remote Commands][Debug] Total Servers Found: "+listCount);
@@ -180,9 +191,6 @@ public class main extends JavaPlugin
     		ServerPorts[x] = serverPort; 
     	}
     	debug("[Remote Commands][Debug] Servers.yml Loaded");
-    }
-    public void getServerName() {
-    	serverName = config.getString("Server-Name");
     }
     
     //#####################################################################################
@@ -497,14 +505,6 @@ public class main extends JavaPlugin
     	debug("[Remote Commands][Debug] Command Loaded to memory Awaiting Repeating Task");
     	debug("[Remote Commands][Debug] Command: "+Command);
     	
-    }
-    public void startListenerSocket(int Port){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
-		try {
-            Thread t = new Server(Port); //Creates new Asynchronous Thread for Listener
-            t.start();
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
     }
 
     public boolean HelpCommand(CommandSender sender) {

@@ -28,22 +28,6 @@ import java.text.SimpleDateFormat;
 
 public class main extends JavaPlugin
 {	
-	//#####################################################################################
-	//                   Todo Ideas / Plans
-	//#####################################################################################
-	
-		// Integrate Remote Broadcast With Custom Colors
-		// Code Cleanup / Code Re-Organization
-		// Look into Improving Encryption / Decryption of Passkey
-		// Plugin User Data Bug
-
-	//#####################################################################################
-	//                   Premium Todo Ideas / Plans
-	//#####################################################################################
-		
-		// DiscordSRV Integration
-		// Basic Web Integration(If Possible?)
-		// 
 	
 	//#####################################################################################
 	//                   Declarations
@@ -56,15 +40,22 @@ public class main extends JavaPlugin
     static String[] WCL = new String[20]; //WCL = Waiting Command List. Stores Commands in queue 
     static String[] LSL = new String[20]; //LSL = Logged String List. Stores Log Messages in queue
     static int Index = 0; // Count of Waiting Commands
+    boolean pluginStarted = false; // Prevents Port Listener from re-enabling upon reload
 	
 	//####   Config Variables   ####
 	int Port = 4000; // This Temporarily Sets This Plugins Listener Port.
     int listCount = 100; // Defines Array Sizes for Servers
     static boolean Debug = false; // Debug Value Default as False
-    double Version = 3.0;	// Current Version Number
+    double Version = 3.1;	// Current Version Number
     double ConfigV = Version; // Temporarily Set as Current Version. Changed to Value in Config After Config Loaded 
     static String serverName = " "; // Temporarily Set as Blank. Changed To Value in Config
-    boolean pluginStarted = false; // Prevents Port Listener from re-enabling upon reload
+    
+    //####  Toggle Variables  ####
+    boolean listenToggle = true;
+    static boolean RCRT = true;
+    static boolean RCST = true;
+    static boolean RBRT = true;
+    static boolean RBST = true;
     
     //####   Messages Variables   ####
     static String[] PM = new String[26]; // Array Contains All Messages Defined in Messages.yml
@@ -98,16 +89,26 @@ public class main extends JavaPlugin
     public void onEnable() {    // Displays Enable Message 
 		loadPlugin();
     	System.out.println("########################"); 
-    	System.out.println("# Remote Commands v3.1 Pre-Build 1 #");
+    	System.out.println("# Remote Commands v3.1 #");
     	System.out.println("########################");
     	System.out.println("[Remote Commands] Made by Aikidored");
+    	System.out.println("[Remote Commands] If you Enjoy. Please Leave a Review on the Spigot Page");
+    	System.out.println("[Remote Commands] Spigot: https://www.spigotmc.org/resources/remote-commands.74321/");
+    	System.out.println("[Remote Commands] Any Bugs or Issues? Contact me on Discord or Github");
+    	System.out.println("[Remote Commands] Discord: https://discord.gg/RYTfade");
+    	System.out.println("[Remote Commands] Github: https://github.com/aikidored/RemoteCommands");
     }
     @Override
     public void onDisable() {  // Displays Disable Message
     	System.out.println( "########################"); 
-    	System.out.println( "# Remote Commands v3.1 Pre-Build 1 #");
+    	System.out.println( "# Remote Commands v3.1 #");
     	System.out.println( "########################");
     	System.out.println("[Remote Commands] Made by Aikidored");
+    	System.out.println("[Remote Commands] If you Enjoy. Please Leave a Review on the Spigot Page");
+    	System.out.println("[Remote Commands] Spigot: https://www.spigotmc.org/resources/remote-commands.74321/");
+    	System.out.println("[Remote Commands] Any Bugs or Issues? Contact me on Discord or Github");
+    	System.out.println("[Remote Commands] Discord: https://discord.gg/RYTfade");
+    	System.out.println("[Remote Commands] Github: https://github.com/aikidored/RemoteCommands");
     }	
     
     //#####################################################################################
@@ -116,6 +117,7 @@ public class main extends JavaPlugin
     public void loadPlugin() {
 		loadConfigFile();
 		Debug = config.getBoolean("Debug"); // Gets Debug Value
+		loadToggles();
 		debug("[Remote Commands][Debug] Loaded Config.yml");
 		loadServersFile();
 		debug("[Remote Commands][Debug] Checking Config.yml Version");
@@ -139,13 +141,15 @@ public class main extends JavaPlugin
     }
     public void startListenerSocket(int Port){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
     	if (pluginStarted == false) {
-			try {
-	            Thread t = new Server(Port); //Creates new Asynchronous Thread for Listener
-	            t.start();
-	         } catch (IOException e) {
-	            e.printStackTrace();
-	         }
-    		pluginStarted = true;
+    		if (listenToggle == true) {
+    			try {
+    	            Thread t = new Server(Port); //Creates new Asynchronous Thread for Listener
+    	            t.start();
+    	         } catch (IOException e) {
+    	            e.printStackTrace();
+    	         }
+        		pluginStarted = true;
+    		}
     	}
 			
     }
@@ -377,7 +381,11 @@ public class main extends JavaPlugin
     			System.out.println("[Remote Commands][Client][Error] A Broadcast Was Rejected by "+remoteServer+" For an Invalid Passkey");
     	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
     	    	logSendToFile("["+timeStamp+"][Error] "+remoteServer+" Denied Connection for an Invalid Passkey");
-    			
+    		} else if (Incoming.equalsIgnoreCase("OFF")){
+    			sender.sendMessage(PM[18]+PM[14]);//TODO FIX Message send to player
+    			System.out.println("[Remote Commands][Client][Error] A Broadcast Was Rejected by "+remoteServer+" - RB Recieve Toggle is OFF");
+    	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+    	    	logSendToFile("["+timeStamp+"][Error] "+remoteServer+" Denied Connection as RBRT is OFF");
     		} else {
     			sender.sendMessage(PM[18]+PM[13]);
     			System.out.println("[Remote Commands][Client][Error] A Broadcast Was Rejected by "+remoteServer);  
@@ -461,7 +469,12 @@ public class main extends JavaPlugin
     			System.out.println("[Remote Commands][Client][Error] A Command Was Rejected by "+remoteServer+" For an Invalid Passkey");
     	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
     	    	logSendToFile("["+timeStamp+"][Error] "+remoteServer+" Denied Connection for an Invalid Passkey");
-    			
+
+    		} else if (Incoming.equalsIgnoreCase("OFF")){
+    			sender.sendMessage(PM[18]+PM[14]);//TODO FIX Message send to player
+    			System.out.println("[Remote Commands][Client][Error] A Command Was Rejected by "+remoteServer+" - RC Recieve Toggle is OFF");
+    	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+    	    	logSendToFile("["+timeStamp+"][Error] "+remoteServer+" Denied Connection as RCRT is OFF");
     		} else {
     			sender.sendMessage(PM[0]+PM[13]);
     			System.out.println("[Remote Commands][Client][Error] A Command Was Rejected by "+remoteServer);  
@@ -579,12 +592,19 @@ public class main extends JavaPlugin
 		index -= 1;
 		return index;
     }
-    
+    public void loadToggles() {
+    	RCRT = config.getBoolean("RCRToggle");
+    	RCST = config.getBoolean("RCSToggle");
+    	RBRT = config.getBoolean("RBRToggle");
+    	RBST = config.getBoolean("RBSToggle");
+    	listenToggle = config.getBoolean("ListenToggle");
+    	
+    }
     public void loadMessages() {
     	debug("[Remote Commands][Debug] Loading Messages");
     	PM[0] = ChatColor.translateAlternateColorCodes('&', Messages.getString("CommandPrefix"));
-    	//PM[1] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-On"));    //Removed Setting. Left Commented out as Placeholder for future expansion
-    	//PM[2] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-Off"));   //Removed Setting. Left Commented out as Placeholder for future expansion 
+    	//PM[1] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-On"));    //Removed Setting. Left Commented out as Placeholder for future expansion  [ Debug Message ]
+    	//PM[2] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-Off"));   //Removed Setting. Left Commented out as Placeholder for future expansion   [ Debug Message ]
     	PM[3] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Sender-Confirmation"));
     	PM[4] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-Menu-Title"));
     	PM[5] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-1"));
@@ -592,7 +612,7 @@ public class main extends JavaPlugin
     	PM[7] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-3"));
     	PM[8] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-4"));
     	PM[9] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-5"));
-    	//PM[10] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-6"));  //Removed Setting. Left Commented out as Placeholder for future expansion
+    	//PM[10] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-6"));  //Removed Setting. Left Commented out as Placeholder for future expansion  [ Debug Message ]
     	PM[11] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-More-Arguments-Needed"));
     	PM[12] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Displaying-Help-Menu"));
     	PM[13] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Command-Send-Misc"));
@@ -607,10 +627,10 @@ public class main extends JavaPlugin
     	PM[22] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-9"));
     	PM[23] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-10"));
     	PM[24] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-11"));
-    	//PM[25] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-12"));  //Removed Setting. Left Commented out as Placeholder for future expansion
+    	//PM[25] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-12"));  //Removed Setting. Left Commented out as Placeholder for future expansion  [ Debug Message ]
     	debug("[Remote Commands][Debug][Message]Prefix: "+PM[0]);
-    	//debug("[Remote Commands][Debug][Message]Debug-On: "+PM[1]);   //Removed Setting. Left Commented out as Placeholder for future expansion 
-    	//debug("[Remote Commands][Debug][Message]Debug-Off: "+PM[2]);  //Removed Setting. Left Commented out as Placeholder for future expansion 
+    	//debug("[Remote Commands][Debug][Message]Debug-On: "+PM[1]);   //Removed Setting. Left Commented out as Placeholder for future expansion   [ Debug Message ]
+    	//debug("[Remote Commands][Debug][Message]Debug-Off: "+PM[2]);  //Removed Setting. Left Commented out as Placeholder for future expansion   [ Debug Message ]
     	debug("[Remote Commands][Debug][Message]Sender-Confirmation: "+PM[3]);
     	debug("[Remote Commands][Debug][Message]Help-Menu-Title: "+PM[4]);
     	debug("[Remote Commands][Debug][Message]Help-1: "+PM[5]);
@@ -618,7 +638,7 @@ public class main extends JavaPlugin
     	debug("[Remote Commands][Debug][Message]Help-3: "+PM[7]);
     	debug("[Remote Commands][Debug][Message]Help-4: "+PM[8]);
     	debug("[Remote Commands][Debug][Message]Help-5: "+PM[9]);
-    	//debug("[Remote Commands][Debug][Message]Help-6: "+PM[10]);  //Removed Setting. Left Commented out as Placeholder for future expansion
+    	//debug("[Remote Commands][Debug][Message]Help-6: "+PM[10]);  //Removed Setting. Left Commented out as Placeholder for future expansion  [ Debug Message ]
     	debug("[Remote Commands][Debug][Message]Error-More-Arguments-Needed: "+PM[11]);
     	debug("[Remote Commands][Debug][Message]Error-Displaying-Help-Menu: "+PM[12]);
     	debug("[Remote Commands][Debug][Message]Error-Command-Send-Misc: "+PM[13]);
@@ -632,7 +652,7 @@ public class main extends JavaPlugin
     	debug("[Remote Commands][Debug][Message]Help-9: "+PM[22]);
     	debug("[Remote Commands][Debug][Message]Help-10: "+PM[23]);
     	debug("[Remote Commands][Debug][Message]Help-11: "+PM[24]);
-    	//debug("[Remote Commands][Debug][Message]Help-12: "+PM[25]);  //Removed Setting. Left Commented out as Placeholder for future expansion
+    	//debug("[Remote Commands][Debug][Message]Help-12: "+PM[25]);  //Removed Setting. Left Commented out as Placeholder for future expansion [ Debug Message ]
     	debug("[Remote Commands][Debug] Finished Loading Messages");
     }
     

@@ -32,29 +32,38 @@ public class Server extends Thread{
             
             String Passkey = in.readUTF();
             if (CheckKey(Passkey) == true) {
-            	out.writeUTF("True");
             	String IncomingType = in.readUTF(); // Should Receive "Command", "Broadcast", or "Test"
-            	if (IncomingType.equalsIgnoreCase("Command")) {
-	            	String Server = in.readUTF();
-	            	String Sender = in.readUTF();
-	            	String Command = in.readUTF();
-	            	main.debug("[Remote Commands][Debug][Server] Server: "+Server);
-	            	main.debug("[Remote Commands][Debug][Server] Sender: "+Sender);
-	            	main.debug("[Remote Commands][Debug][Server] Command: "+Command);
-	        		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-	    			String LogString = "["+timeStamp+"][Received] Player: ["+Sender+"] Sent Command ["+Command+"] from Server: "+Server+" At: "+server.getRemoteSocketAddress();
-	            	main.addCommand(Command , LogString);
+            	if (IncomingType.equalsIgnoreCase("Command") ) {
+            		if(main.RCRT == true) {
+                    	out.writeUTF("True");
+		            	String Server = in.readUTF();
+		            	String Sender = in.readUTF();
+		            	String Command = in.readUTF();
+		            	main.debug("[Remote Commands][Debug][Server] Server: "+Server);
+		            	main.debug("[Remote Commands][Debug][Server] Sender: "+Sender);
+		            	main.debug("[Remote Commands][Debug][Server] Command: "+Command);
+		        		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+		    			String LogString = "["+timeStamp+"][Received] Player: ["+Sender+"] Sent Command ["+Command+"] from Server: "+Server+" At: "+server.getRemoteSocketAddress();
+		            	main.addCommand(Command , LogString);
+            		} else {
+            			out.writeUTF("001");
+            		}
             	} else if (IncomingType.equalsIgnoreCase("Broadcast")) {
-	            	String Server = in.readUTF();
-	            	String Sender = in.readUTF();
-	            	String Broadcast = in.readUTF();
-	            	main.debug("[Remote Commands][Debug][Server] Server: "+Server);
-	            	main.debug("[Remote Commands][Debug][Server] Sender: "+Sender);
-	            	main.debug("[Remote Commands][Debug][Server] Broadcast: "+Broadcast);
-	        		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-	    			String LogString = "["+timeStamp+"][Received] Player: ["+Sender+"] Sent Broadcast ["+Broadcast+"] from Server: "+Server+" At: "+server.getRemoteSocketAddress();
-	    			Bukkit.broadcastMessage(main.PM[18] + ChatColor.translateAlternateColorCodes('&', Broadcast));
-	    			main.logString(LogString);
+            		if(main.RBRT == false) {
+                    	out.writeUTF("True");
+    	            	String Server = in.readUTF();
+    	            	String Sender = in.readUTF();
+    	            	String Broadcast = in.readUTF();
+    	            	main.debug("[Remote Commands][Debug][Server] Server: "+Server);
+    	            	main.debug("[Remote Commands][Debug][Server] Sender: "+Sender);
+    	            	main.debug("[Remote Commands][Debug][Server] Broadcast: "+Broadcast);
+    	        		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+    	    			String LogString = "["+timeStamp+"][Received] Player: ["+Sender+"] Sent Broadcast ["+Broadcast+"] from Server: "+Server+" At: "+server.getRemoteSocketAddress();
+    	    			Bukkit.broadcastMessage(main.PM[18] + ChatColor.translateAlternateColorCodes('&', Broadcast));
+    	    			main.logString(LogString);
+            		} else {
+            			out.writeUTF("002");
+            		}
             	} else if (IncomingType.equalsIgnoreCase("Test")) {
             		out.writeUTF("Online");
             	}

@@ -4,13 +4,20 @@
 #
 
 #
-# Remote Commands was made to send commands between multiple seperate 
-# servers as long as they are configured correctly.
+# This Plugin Allows Players/Plugins/Console to issue commands or broadcasts to external server instances.
+#
+
+#
+# Issues? Bugs? Suggestions? Contact me on Discord at https://discord.gg/RYTfade
+# 
+
+#
+# If you Are Enjoying Remote Commands Please leave a review on Spigot https://www.spigotmc.org/resources/remote-commands.74321/
 #
 
 # Version Information:
 # Do NOT Change these Values. 
-Config-Version: 3.0
+Config-Version: 3.1
 
 # Debug Options:
 # Outputs Information about Plugin as it is performing Actions.
@@ -33,7 +40,7 @@ PassKey: 123456
 
 
 # The Port-Listener defines what port listeners uses.
-# This value must different from any other ports being used on servers computer.
+# This value must different from any other ports being used on local computer.
 # Accepts Int Value 
 Port-Listener: 4000
 
@@ -44,3 +51,29 @@ Port-Listener: 4000
 # Accepts Int Value
 Server-Count: 4
 # To make sure you get the right count, Look at your last server and add 1
+
+##############################
+# Command Feature Toggles:
+##############################
+
+# Disable Listener:
+# Setting this to false will disable all recieve functionality of the plugin.
+ListenToggle: true
+
+# Receive Command Toggle:
+# This Toggle Controls if the plugin is allowed to recieve Commands from external servers.
+RCRToggle: true
+
+# Send Command Toggle: 
+# This Toggle Controls if the Plugin can send Commands to External Servers.
+RCSToggle: true
+
+
+# Recieve Broadcast Toggle:
+# This Toggle Controls if the plugin is allowed to recieve Broadcasts from external servers.
+RBRToggle: true
+
+# Send Broadcast Toggle:
+# This Toggle Controls if the plugin can send Broadcasts to External Servers.
+RBSToggle: true
+

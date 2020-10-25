@@ -1,8 +1,5 @@
 package net.elitegame.aiki.RC;
 /*
- * REbuild Listener Socket
- * Create List Sernder Socker
- * Update Encryption Method
  * Finish Messages.yml
  * Add Error Log Toggle
  * Think About Other New Features
@@ -51,7 +48,7 @@ public class main extends JavaPlugin
 	// Config Declarations #
 	//######################
 	static boolean Debug = false; // Contains The Boolean for whether or not Debug Messages are Displayed 
-	boolean[] FeatureToggles = new boolean[6]; // Creates Array for Feature Toggles set in Config
+	static boolean[] FeatureToggles = new boolean[6]; // Creates Array for Feature Toggles set in Config
 	double Version = 4.0; // Version of Plugin
 	int Port = 4000; // Plugin Port. Set as 4000, Reset in Config Load
     int listCount = 100; // Defines Array Sizes for Servers (Set at 100 for Space Buffer. Can be increased)
@@ -68,7 +65,7 @@ public class main extends JavaPlugin
 	//###########
 	// Messages #
 	//###########
-    static String[] PM = new String[26]; // Array Contains All Messages Defined in Messages.yml
+    static String[] PM = new String[27]; // Array Contains All Messages Defined in Messages.yml
     
 	//#####################
 	// Class Declarations #
@@ -92,9 +89,11 @@ public class main extends JavaPlugin
     // Command Variables #
     //####################
     static String[] WCL = new String[20]; //WCL = Waiting Command List. Stores Commands in queue 
-    static String[] LSL = new String[20]; //LSL = Logged String List. Stores Log Messages in queue
-    static int Index = 0; // Count of Waiting Commands
-    static boolean commandWaiting = false; // Declars whether a command was recieved and is waiting
+    static String[] LSL = new String[40]; //LSL = Logged String List. Stores Log Messages in queue
+    static int WCLIndex = 0; // Count of Waiting Commands to be Issued
+    static int LSLIndex = 0; // Count of waiting Strings to be Logged
+    static boolean commandWaiting = false; // Declares whether a command was received and is waiting
+    static boolean LSLWaiting = false; //Declares whether a log string is waiting to be added to log
     static String receivedCommand = " "; // Stores Received Command
     static String LoggedString = " "; // Stores Received String 
     
@@ -269,15 +268,21 @@ public class main extends JavaPlugin
     	sender.sendMessage(PM[0]+PM[17]);
     	return true;
     }
-    public boolean list(CommandSender sender) {//TODO Add More Functionality 				
+    public boolean list(CommandSender sender) { 				
     	sender.sendMessage(PM[0]+PM[16]);
-    	for (int h = 0; h < ServerList.length; h++) {
-    		int i = h+1;
-    		sender.sendMessage(i + ". " + ServerList[h]);
+    	return ListStatus(sender);
+    }
+    public boolean debugCommand(CommandSender sender) {
+    	if (Debug == true) {
+    		Debug = false;
+    		sender.sendMessage(PM[0]+PM[2]);
+    	} else {
+    		Debug = true;
+    		sender.sendMessage(PM[0]+PM[1]);
     	}
     	return true;
     }
-
+    
     //#######################
     // Get Location Methods #
     //#######################
@@ -305,6 +310,80 @@ public class main extends JavaPlugin
 		return index;
     }
     
+
+    //######################
+    // Send Command Methods#
+    //######################
+    public boolean ListStatus(CommandSender sender) {
+    	boolean check = false;
+    	for (int u = 0; u< ServerList.length; u++) {
+    		check = sendStatusCheck(sender, ServerList[u]);
+    	}
+    	return check;
+    }
+    public boolean sendStatusCheck(CommandSender sender, String Server) {
+		String Sender = sender.toString();
+		int serverIndex = getIndex(Server); 
+		String PassKey = t.getEncryptedKey(Passkey);
+	    String ServerIPString = GetServerIp(serverIndex); 
+	   	int serverPort = GetServerPort(serverIndex);
+	   	InetAddress ServerIP = null; 
+		try {
+			ServerIP = InetAddress.getByName(ServerIPString); 
+		} catch (UnknownHostException e) {
+			e.printStackTrace();   //Catches Error
+		}
+	   	debug("[Client] Variables Registered:||Player:"+Sender+" ||Status Check ||Server:"+ Server +"  ||IP:"+ ServerIP  +":"+ serverPort); 
+   		startStatusCheckClientSocket(ServerIP, serverPort, sender, Sender, Server,  PassKey);
+    	return true;
+    }
+    public void startStatusCheckClientSocket(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.
+    	new Thread(() -> {
+    	    StatusCheckClient(Server, port, sender, Sender, remoteServer, PassKey);
+    	}).start();
+    }
+    public void StatusCheckClient(InetAddress Server, int port, CommandSender sender, String Sender, String remoteServer, String PassKey) { //Connects to GreetingServer listener on other server. issues Command. Displays response from GreetingServer.
+    	//## Method Variable Declaration ##
+		String Incoming;
+		
+		//## Attempting Connection ##
+    	try {
+    		//## Declaring Data In/Out Streams ##
+    		Socket client = new Socket(Server, port);    		
+    		debug( "[Remote Commands][Debug][Client] Established Connection to "+remoteServer+" at IP: "+ client.getRemoteSocketAddress());
+    		OutputStream outToServer = client.getOutputStream(); //declares output Stream    		
+    		DataOutputStream out = new DataOutputStream(outToServer); //declares output stream Variable
+    		InputStream inFromServer = client.getInputStream(); //declares input stream
+    		DataInputStream in = new DataInputStream(inFromServer); //declares input stream variable 
+    		
+    		//## Communicating with Remote Server ##
+    		
+    		out.writeUTF(PassKey); //Converts Command to Data and Outputs Stream
+    		Incoming = in.readUTF();
+    		if (Incoming.equals("True")) {
+    			out.writeUTF("Test");
+    			sender.sendMessage(PM[0]+remoteServer+PM[24]);
+    			debug(remoteServer +" Is ONLINE");
+    		} else if (Incoming.equalsIgnoreCase("Invalid Passkey")){
+    			sender.sendMessage(PM[0]+remoteServer+ PM[25]); 
+    			System.out.println("[Remote Commands][Client][Error] A Command Was Rejected by "+remoteServer+" For an Invalid Passkey");
+
+    		} else {
+    			sender.sendMessage(PM[0]+PM[21]);
+    			System.out.println("[Remote Commands][Client][Error] An Error Occured at "+remoteServer);  
+    			System.out.println("[Remote Commands][Client][Error] Please Contact Aikidored at https://discord.gg/RYTfade. Your Error Code is [01]");  			
+    		}
+    		//## Closes Connection ##
+    		client.close(); //Closes Client Socket to allow for remote server to accept new connections
+    	} catch (IOException e) {
+			sender.sendMessage(PM[0]+remoteServer+ PM[25]);   		
+    		System.out.println("[Remote Commands][Client][Error] Could not connect to "+remoteServer);
+    		System.out.println("[Remote Commands][Client][Error] Please check is remote server is online and configured Properly");
+	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+	    	logErrorToFile("["+timeStamp+"] Could Not connect to "+remoteServer+" at: "+Server.toString()+":"+port);
+    	}
+    }
+   
     //######################
     // Send Command Methods#
     //######################
@@ -384,6 +463,12 @@ public class main extends JavaPlugin
 	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 	    	logErrorToFile("["+timeStamp+"] Could Not connect to "+remoteServer+" at: "+Server.toString()+":"+port);
     	}
+    }
+    public static void addCommand(String Command) {
+    	commandWaiting = true;
+    	WCL[WCLIndex] = Command;
+    	WCLIndex++;
+    	debug("Command ["+ Command+"] Loaded To Memory. Awaiting repeating Task.");
     }
     
     //########################
@@ -470,18 +555,17 @@ public class main extends JavaPlugin
    // Start Plugin Methods #
    //#######################
    public void startListenerSocket(int Port){ //This Method Starts the Greeting Server and allows Greeting Clients to Send Message  to this plugin to be Ran.            
- /*  	if (pluginStarted == false) {
-   			try {
-   	            Thread t = new Server(Port); //Creates new Asynchronous Thread for Listener
-   	            t.start();
-   	         } catch (IOException e) {
-   	            e.printStackTrace();
-   	         }
+  	if (pluginStarted == false) {
+   		try {
+   	         Thread t = new Server(Port); //Creates new Asynchronous Thread for Listener
+   	         t.start();
+   	    } catch (IOException e) {
+   	         e.printStackTrace();
+   	    }
        		pluginStarted = true;
-   		}
-   	}
-	*/ //TODO Complete Listener		
    }
+   		
+}
    public void startRepeatingTask() { // Checks If Commands Are Awaiting to be Issued     
    	debug("[Remote Commands][Debug] Starting Repeating Clock");
    	Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -489,15 +573,21 @@ public class main extends JavaPlugin
 			@Override
 			public void run() {
 				if (commandWaiting == true) {
-					for(int x = 0; x < Index; x++) {
+					for(int x = 0; x < WCLIndex; x++) {
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), WCL[x]);
-						logToFile(LSL[x]);
 						
 					}
 						commandWaiting = false;
-						Index = 0;
-						debug("[Remote Commands][Debug] Command Issued");
-						LoggedString = " ";
+						WCLIndex = 0;
+						debug("[Remote Commands][Debug] Awaiting Commands Issued");
+				}
+				if (LSLWaiting == true) {
+					for(int x = 0; x < LSLIndex; x++) {
+						logToFile(LSL[x]);
+					}
+						LSLWaiting = false;
+						LSLIndex = 0;
+						debug("[Remote Commands][Debug] Awaiting Log Entries Issued");
 				}				
 			}    		
    	}, 100L, 100L);
@@ -614,9 +704,9 @@ public class main extends JavaPlugin
         
         //########### Retreiving Information ##############
     	debug("Loading Messages");
-    	PM[0] = ChatColor.translateAlternateColorCodes('&', Messages.getString("CommandPrefix")); debug("[Message]Prefix: "+PM[0]);
-    	//PM[1] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-On")); debug("[Message]Debug-On: "+PM[1]);   //Removed Setting. Left Commented out as Placeholder for future expansion  [ Debug Message ]
-    	//PM[2] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-Off")); debug("[Message]Debug-Off: "+PM[2]);  //Removed Setting. Left Commented out as Placeholder for future expansion   [ Debug Message ]
+    	PM[0] = ChatColor.translateAlternateColorCodes('&', Messages.getString("GeneralPrefix")); debug("[Message]GeneralPrefix: "+PM[0]);
+    	PM[1] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-On")); debug("[Message]Debug-On: "+PM[1]);   
+    	PM[2] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-Off")); debug("[Message]Debug-Off: "+PM[2]); 
     	PM[3] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Sender-Confirmation")); debug("[Message]Sender-Confirmation: "+PM[3]);
     	PM[4] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-Menu-Title")); debug("[Message]Help-Menu-Title: "+PM[4]);
     	PM[5] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-1")); debug("[Message]Help-1: "+PM[5]);
@@ -636,10 +726,11 @@ public class main extends JavaPlugin
     	PM[19] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Not-Accepting-Broadcasts")); debug("[Message]Error-Not-Accepting-Broadcasts: "+PM[19]); 
     	PM[20] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-7")); debug("[Message]Help-7: "+PM[20]);   
     	PM[21] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Not-Accepting-Commands")); debug("[Message]Error-Not-Accepting-Commands: "+PM[21]); 
-    	PM[22] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Sending-Commands-Disabled")); debug("[Message]Error-Sending-Commands-Disabled: "+PM[22]);  //Removed Setting. Left Commented out as Placeholder for future expansion
-    	PM[23] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Sending-Commands-Disabled")); debug("[Message]Error-Sending-Commands-Disabled: "+PM[23]);  //Removed Setting. Left Commented out as Placeholder for future expansion
-    	//PM[24] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-11")); debug("[Message]Help-11: "+PM[24]);  //Removed Setting. Left Commented out as Placeholder for future expansion
-    	//PM[25] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-12")); debug("[Message]Help-12: "+PM[25]); //Removed Setting. Left Commented out as Placeholder for future expansion  [ Debug Message ]
+    	PM[22] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Sending-Commands-Disabled")); debug("[Message]Error-Sending-Commands-Disabled: "+PM[22]); 
+    	PM[23] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Sending-Commands-Disabled")); debug("[Message]Error-Sending-Commands-Disabled: "+PM[23]); 
+    	PM[24] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Status-Online")); debug("[Message]Status-Online: "+PM[24]);
+    	PM[25] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Status-Offline")); debug("[Message]Status-Offline: "+PM[25]);
+    	PM[26] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-8")); debug("[Message]Help-8: "+PM[26]);
     	debug("Finished Loading Messages");
         
         System.out.println("[Remote Commands] Messages.yml Loaded");
@@ -647,9 +738,17 @@ public class main extends JavaPlugin
         
 		
 	}
+	
+   //###############
+   // Log  Methods #
+   //###############
+   public static void addLog(String Message) {		//Accepts Log Entries from Other Classes and Adds them to Waiting List to be Added to Log
+	   LSL[LSLIndex] = Message;
+	   LSLWaiting = true;
+	   LSLIndex++;
+   }
    
-   
-	public void logToFile(String message) {
+	public void logToFile(String message) {			// Logs Recieved Message to File
 		 if (FeatureToggles[4] == true) {
 		        try
 		        {

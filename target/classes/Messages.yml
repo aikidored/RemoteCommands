@@ -11,7 +11,7 @@
 #
 
 # This Prefix shows before any of the below messages.
-CommandPrefix: '&7[&3&lRC&7]' # Shown Before Any Commands
+GeneralPrefix: '&7[&3&lRC&7]' # Shown Before Any Plugin Messages to User
 BroadcastPrefix: '&7[&3&lRB&7]' # Shown Before Any Broadcasts 
 
 # Shown when reloading the plugin
@@ -20,8 +20,17 @@ Plugin-Reload: '&e>>&3 Plugin Reloaded'
 # Message Sent Confirmation 
 Sender-Confirmation: '&e>>&3 Sent'
 
+#These Messages appear after running the debug toggle command 
+Debug-On: '&e>>&3 Debug Mode Enabled'
+Debug-Off:'&e>>&3 Debug Mode Disabled'
+
 # Title of Server list
 RC-Server-List: '&e>>&3 Server List '
+
+# These Messages will appear during a List Command Status Check discating whether the Remote Server is Online of Offline
+# The List WIll be Formatted as %GeneralPrefix% %RemoteServer% %Status%
+Status-Online: '&3 Is &2Online'
+Status-Offline: ' &3Is &4OFFLINE'
 
 # Command Help Messages
 Help-Menu-Title: '&e>>&3Remote Commands Help Menu'
@@ -32,6 +41,7 @@ Help-4: '&e>>&3&6/&3RB SendAll &e>>&3 Sends Broadcast to all Servers'
 Help-5: '&e>>&3&6/&3RC Reload &e>>&3 Reloads the Plugin'
 Help-6: '&e>>&3&6/&3RC Help &e>>&3 Opens Help Menu'
 Help-7: '&e>>&3&6/&3RC List &e>>&3 Lists Available Servers'
+Help-8: '&e>>&3&6/&3RC Debug &e>>&3 Toggles Current Status of Debug Mode'
 
 #
 # Below are the Error Messages

@@ -15,8 +15,7 @@ public class Encryption {
 		int EncryptionDepth = getEncryptionDepth();
 		int finalKey = EncryptKey(PassKey, EncryptionDepth, EncryptionLevel);
 		EncryptedPassKey = EncryptionDepth + "/" + EncryptionLevel + "/" + finalKey;
-		main.debug(EncryptedPassKey);		
-		
+		main.debug(EncryptedPassKey);
 		return EncryptedPassKey;
 		
 	}

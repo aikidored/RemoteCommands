@@ -79,7 +79,7 @@ public class MetricsLite {
      *                 It can be found at <a href="https://bstats.org/what-is-my-plugin-id">What is my plugin id?</a>
      */
     public MetricsLite(Plugin plugin, int pluginId) {
-    	main.debug("[Remote Commands][Bstats][Debug] Plugin Initialized");
+    	main.debug("[Bstats] Plugin Initialized");
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null!");
         }
@@ -122,12 +122,13 @@ public class MetricsLite {
         logFailedRequests = config.getBoolean("logFailedRequests", false);
         enabled = config.getBoolean("enabled", true);
         if (config.getBoolean("enabled", true) == false) {
-        	System.out.println("#######################################");
-        	System.out.println("#### Remote Commands  ####");
-        	System.out.println("#### It seems you have Bstats Disabled");
-        	System.out.println("#### Please Consider Enabling it. It Does NOT collect any personal information ");
-        	System.out.println("#### You can see what data is collected at https://bstats.org/plugin/bukkit/Remote%20Commands/6397");
-        	System.out.println("#######################################");
+        	System.out.println("####################################################################################################");
+        	System.out.println("#### Remote Commands                                                                               #");
+        	System.out.println("####################################################################################################");
+        	System.out.println("#### It seems you have Bstats Disabled                                                             #");
+        	System.out.println("#### Please Consider Enabling it. It Does NOT collect any personal information                     #");
+        	System.out.println("#### You can see what data is collected at https://bstats.org/plugin/bukkit/Remote%20Commands/6397 #");
+        	System.out.println("####################################################################################################");
         }
         logSentData = config.getBoolean("logSentData", false);
         logResponseStatusText = config.getBoolean("logResponseStatusText", false);

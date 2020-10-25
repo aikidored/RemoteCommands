@@ -106,6 +106,7 @@ public class main extends JavaPlugin
 		loadConfigFile(); 
 		loadServersFile();
 		loadMessageFile();
+		loadBstats();
    }
     public void startPlugin() { // Starts Plugin Internals     
 	   if (pluginStarted == false) 
@@ -776,7 +777,14 @@ public class main extends JavaPlugin
 			e.printStackTrace();
 		}
 	}
-   //###############
+	public void loadBstats() {
+		int pluginId = 6397; // <-- BSTATS Value
+        @SuppressWarnings("unused")// <-- BSTATS Value
+		MetricsLite metrics = new MetricsLite(this, pluginId);// <-- BSTATS Value
+    	serverName = config.getString("Server-Name");
+	}
+	
+	//###############
    // Log  Methods #
    //###############
    public static void addLog(String Message) {		//Accepts Log Entries from Other Classes and Adds them to Waiting List to be Added to Log

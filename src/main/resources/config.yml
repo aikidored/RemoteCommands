@@ -24,7 +24,7 @@ FirstLoad: true
 # This will flood Console with Messages when active.
 # Accepts Boolean Value
 # Default is False.
-Debug: false
+Debug: true
 
 # Server Name:
 # Used as Server Identifier when Communicating

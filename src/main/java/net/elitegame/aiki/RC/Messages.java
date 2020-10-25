@@ -1,5 +1,7 @@
 package net.elitegame.aiki.RC;
 
+import org.bukkit.command.CommandSender;
+
 public class Messages {
 
 	public void EnableMessage(){ //Message That Displays Upon Plugin Load
@@ -12,6 +14,9 @@ public class Messages {
     	System.out.println("[Remote Commands] Any Bugs or Issues? Contact me on Discord or Github");
     	System.out.println("[Remote Commands] Discord: https://discord.gg/RYTfade");
     	System.out.println("[Remote Commands] Github / Wiki: https://github.com/aikidored/RemoteCommands");
+        System.out.println("");	
+        System.out.println("Loading Plugin . . . ");	
+        System.out.println("");	
 	}
 	public void DisableMessage(){ //Message That Displays Upon Plugin Termination
     	System.out.println( "########################"); 
@@ -26,5 +31,11 @@ public class Messages {
 	}
 	public void FirstLoad() {
 		//TODO write Welcome Message
+        System.out.println("");	
+		System.out.println("First Load Message");
+        System.out.println("");	
+	}
+	public void Help(CommandSender sender) {
+		//TODO Display Help Messages
 	}
 }

@@ -1,6 +1,6 @@
 name: RemoteCommands
 main: net.elitegame.aiki.RC.main
-version: 3.1
+version: 4.0
 author: aiki
 commands:
    RC:

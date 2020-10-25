@@ -14,5 +14,5 @@ import org.bukkit.ChatColor;
 
 public class Server extends Thread
 {
-	
+
 }//Close Class

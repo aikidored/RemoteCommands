@@ -67,6 +67,8 @@ public class main extends JavaPlugin
 	//###################
     public File configf;
     public static FileConfiguration config;
+    public File configi;
+    public static FileConfiguration config2;
     public File configs;
     public static FileConfiguration Servers;
     public File configl;
@@ -217,7 +219,7 @@ public class main extends JavaPlugin
            		else if (Argument0.equalsIgnoreCase(serverName) == true) {
            			if (FeatureToggles[2] == true) {
                			checkBool = true;
-               			Bukkit.broadcastMessage(PM[18] + Command);
+               			Bukkit.broadcastMessage(main.PM[18] + ChatColor.translateAlternateColorCodes('&', Command));
                	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
                	    	logToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent Command:["+Command+"] to ["+Argument0+"]");
            				
@@ -437,7 +439,6 @@ public class main extends JavaPlugin
     			out.writeUTF(serverName);
     			out.writeUTF(Sender);
     			out.writeUTF(Command);
-    			sender.sendMessage(PM[0]+PM[3]);
     			debug("[Remote Commands][Debug][Client] "+Sender+" Sent "+Command+" to "+remoteServer);
     	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
     	    	logToFile("["+timeStamp+"][Send] Player ["+Sender+"] Sent ["+Command+"] to ["+remoteServer+"]");
@@ -519,7 +520,6 @@ public class main extends JavaPlugin
     			out.writeUTF(serverName);
     			out.writeUTF(Sender);
     			out.writeUTF(Command);
-    			sender.sendMessage(PM[18]+PM[3]);
     			debug("[Remote Commands][Debug][Client] "+Sender+" Sent "+Command+" to "+remoteServer);
     	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
     	    	logToFile("["+timeStamp+"][Send] Player ["+Sender+"] Sent ["+Command+"] to ["+remoteServer+"]");
@@ -603,6 +603,19 @@ public class main extends JavaPlugin
             e.printStackTrace();
         } 
         
+    	configi = new File(getDataFolder(), "Config-Info.yml");    	
+        if (!configi.exists()) {
+            configi.getParentFile().mkdirs();
+            saveResource("Config-Info.yml", false);
+        }
+        config2 = new YamlConfiguration();       
+        try {
+            config2.load(configi);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        } 
+        
+        
         //########### Retreiving Information ##############
         LSD = config.getBoolean("Log-Startup-Dump");
         logSID("Starting Log Dump");
@@ -616,8 +629,8 @@ public class main extends JavaPlugin
 		debug("Debug Value: "+ Debug);
         logSID("Debug Value: "+ Debug);
 		
-		if (Version == config.getDouble("Config-Version"))   {debug("Config Version Correct");logSID("Config Version Correct");}   else   { M.ConfigOutdated();}  // Checks if Config Version is Correct
-		if (config.getBoolean("FirstLoad") == true) { M.FirstLoad();logSID("First Load"); config.set("FirstLoad", true);}
+		if (Version == config2.getDouble("Config-Version"))   {debug("Config Version Correct");logSID("Config Version Correct");}   else   { M.ConfigOutdated();}  // Checks if Config Version is Correct
+		if (config2.getBoolean("FirstLoad") == true) { M.FirstLoad();logSID("First Load"); config2.set("FirstLoad", false); saveConfigFile();}
 
 		serverName = config.getString("Server-Name");
 		debug("Server Name: "+ serverName);
@@ -724,7 +737,7 @@ public class main extends JavaPlugin
     	PM[0] = ChatColor.translateAlternateColorCodes('&', Messages.getString("GeneralPrefix")); 					   debug("[Message]GeneralPrefix: "+PM[0]); 						logSID("[Message]GeneralPrefix: "+PM[0]); 	
     	PM[1] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-On")); 						   debug("[Message]Debug-On: "+PM[1]);    							logSID("[Message]Debug-On: "+PM[1]);
     	PM[2] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-Off")); 						   debug("[Message]Debug-Off: "+PM[2]);  							logSID("[Message]Debug-Off: "+PM[2]);
-    	PM[3] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Sender-Confirmation"));			 	   debug("[Message]Sender-Confirmation: "+PM[3]); 					logSID("[Message]Sender-Confirmation: "+PM[3]);
+    	//PM[3] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Sender-Confirmation"));			 	   debug("[Message]Sender-Confirmation: "+PM[3]); 					logSID("[Message]Sender-Confirmation: "+PM[3]);
     	PM[4] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-Menu-Title")); 			 	   debug("[Message]Help-Menu-Title: "+PM[4]); 						logSID("[Message]Help-Menu-Title: "+PM[4]);
     	PM[5] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-1")); 							   debug("[Message]Help-1: "+PM[5]); 								logSID("[Message]Help-1: "+PM[5]);
     	PM[6] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-2")); 							   debug("[Message]Help-2: "+PM[6]); 								logSID("[Message]Help-2: "+PM[6]);
@@ -756,7 +769,13 @@ public class main extends JavaPlugin
         
 		
 	}
-	
+	public void saveConfigFile() {
+		try {
+				config2.save(configi);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
    //###############
    // Log  Methods #
    //###############

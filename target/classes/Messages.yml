@@ -17,8 +17,6 @@ BroadcastPrefix: '&7[&3&lRB&7]' # Shown Before Any Broadcasts
 # Shown when reloading the plugin
 Plugin-Reload: '&e>>&3 Plugin Reloaded'
 
-# Message Sent Confirmation 
-Sender-Confirmation: '&e>>&3 Sent'
 
 #These Messages appear after running the debug toggle command 
 Debug-On: '&e>>&3 Debug Mode Enabled'

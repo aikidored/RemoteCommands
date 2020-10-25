@@ -17,8 +17,8 @@
 
 # Version Information:
 # Do NOT Change these Values. 
-Config-Version: 3.1
-
+Config-Version: 4.0
+FirstLoad: true
 # Debug Options:
 # Outputs Information about Plugin as it is performing Actions.
 # This will flood Console with Messages when active.
@@ -53,27 +53,26 @@ Server-Count: 4
 # To make sure you get the right count, Look at your last server and add 1
 
 ##############################
-# Command Feature Toggles:
+# Feature Controls 
 ##############################
 
-# Disable Listener:
-# Setting this to false will disable all recieve functionality of the plugin.
-ListenToggle: true
+# Allow Commands to be Received
+T0: true
 
-# Receive Command Toggle:
-# This Toggle Controls if the plugin is allowed to recieve Commands from external servers.
-RCRToggle: true
+# Allow Commands to be Sent
+T1: true
 
-# Send Command Toggle: 
-# This Toggle Controls if the Plugin can send Commands to External Servers.
-RCSToggle: true
+# Allow Broadcasts to be Received 
+T2: true
+
+# Allow Broadcasts to be Sent
+T3: true
+
+# Log Incoming and Outgoing Messages
+T4: true
+
+# Log Errors (Will Log All Failed Messages)
+T5: true
 
 
-# Recieve Broadcast Toggle:
-# This Toggle Controls if the plugin is allowed to recieve Broadcasts from external servers.
-RBRToggle: true
-
-# Send Broadcast Toggle:
-# This Toggle Controls if the plugin can send Broadcasts to External Servers.
-RBSToggle: true
 

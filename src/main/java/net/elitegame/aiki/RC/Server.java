@@ -32,10 +32,10 @@ public class Server extends Thread{
 	             
 	             String Passkey = in.readUTF();
 	             if (CheckKey(Passkey) == true) {
+	            	 out.writeUTF("True");
 	             	String IncomingType = in.readUTF(); // Should Receive "Command", "Broadcast", or "Test"
 	             	if (IncomingType.equalsIgnoreCase("Command") ) {
 	             		if(main.FeatureToggles[0] == true) {
-	                     	out.writeUTF("True");
 	 		            	String Server = in.readUTF();
 	 		            	String Sender = in.readUTF();
 	 		            	String Command = in.readUTF();
@@ -52,7 +52,6 @@ public class Server extends Thread{
 	             		}
 	             	} else if (IncomingType.equalsIgnoreCase("Broadcast")) {
 	             		if(main.FeatureToggles[2] == true) {
-	                     	out.writeUTF("True");
 	     	            	String Server = in.readUTF();
 	     	            	String Sender = in.readUTF();
 	     	            	String Broadcast = in.readUTF();
@@ -68,8 +67,7 @@ public class Server extends Thread{
 	             			out.writeUTF("OFF");
 	             		}
 	             	} else if (IncomingType.equalsIgnoreCase("Test")) {
-	             		main.debug("[Server] Established Connection was Status Check. Responding Online and Resetting Socket");
-	             		out.writeUTF("Online");
+	             		main.debug("[Server] Established Connection was Status Check. Resetting Socket");
 	             	}
 	             } else {
 	             	main.debug("Invalid Passkey Recieved from: "+server.getRemoteSocketAddress());

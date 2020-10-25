@@ -12,4 +12,4 @@ commands:
       description: This is a command will Broadcast a Message of your choice to another server
       usage: /RB [server / Command] [Message]
       permission: RemoteBroadcasts.Use
-      permission-message: You don't have RemoteBroadcasts.useh
+      permission-message: You don't have RemoteBroadcasts.use

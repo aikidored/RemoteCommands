@@ -32,10 +32,38 @@ public class Messages {
 	public void FirstLoad() {
 		//TODO write Welcome Message
         System.out.println("");	
-		System.out.println("First Load Message");
+        System.out.println("");
+        System.out.println("");
+		System.out.println("########################################################################################################################################################");
+        System.out.println("		THANK YOU for installing Remote Commands v4.0");
+        System.out.println("		Ive noticed This is a fresh install of Remote Commands v4.0");
+        System.out.println("		Ive got a Few Tips that may help you Install This Plugin.");
+        System.out.println("");
+        System.out.println("		1. Join my Discord https://discord.gg/RYTfade");
+        System.out.println("		2. Check out the Wiki on Github https://github.com/aikidored/RemoteCommands");
+        System.out.println("		3. Configure the Config.YML File [This File Holds Some of the Most Important Settings and Control of Certain Features!]");
+        System.out.println("		4. Configure the Servers.YML File [This FIle is the Backbone of the Entire plugin. If not configured properly this plugin is USELESS!!]");	
+        System.out.println("			4a. Make Sure ALL ports that servers are listening to are OPEN. If Ports arent open my plugin cant work.");	
+        System.out.println("		5. Configure the Messages.YML File [This is going on your server. Make the Messages Yours!]");	
+        System.out.println("		6. Do Some Testing. Make sure All servers can communicate. the List Command is Great for this!");	
+        System.out.println("			6a. TroubleShooting help is Offered on the wiki and in the discord.");	
+        System.out.println("		7. Be Careful Giving out Access!!! [This Plugin Runs Commands As CONSOLE not as the issuing Player]");	
+        System.out.println("		8. Debug Mode will SPAM Console. use it sparingly when needed.");	
+        System.out.println("");	
+        System.out.println("#######################################################################################################################################################");	
+        System.out.println("");	
+        System.out.println("");	
         System.out.println("");	
 	}
 	public void Help(CommandSender sender) {
-		//TODO Display Help Messages
+		sender.sendMessage(main.PM[4]);
+		sender.sendMessage(main.PM[5]);
+		sender.sendMessage(main.PM[6]);
+		sender.sendMessage(main.PM[7]);
+		sender.sendMessage(main.PM[8]);
+		sender.sendMessage(main.PM[9]);
+		sender.sendMessage(main.PM[10]);
+		sender.sendMessage(main.PM[20]);
+		sender.sendMessage(main.PM[26]);
 	}
 }

@@ -1,15 +1,4 @@
 package net.elitegame.aiki.RC;
-/*
- * Finish Messages.yml
- * Add Error Log Toggle
- * Think About Other New Features
- * 
- * 
- * 
- * 
- * 
- * 
- */
 
 import java.io.DataInputStream;
 
@@ -23,7 +12,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -47,6 +35,7 @@ public class main extends JavaPlugin
 	//######################
 	// Config Declarations #
 	//######################
+	boolean LSD = false;  // Startup Log Information Dump Value
 	static boolean Debug = false; // Contains The Boolean for whether or not Debug Messages are Displayed 
 	static boolean[] FeatureToggles = new boolean[6]; // Creates Array for Feature Toggles set in Config
 	double Version = 4.0; // Version of Plugin
@@ -124,121 +113,131 @@ public class main extends JavaPlugin
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) throws IndexOutOfBoundsException{  // Accepts Player Commands
     	if(args.length != 0) {
     		if (label.equalsIgnoreCase("RC") == true) {
-    			String Argument0 = args[0];
-        	   	String Command;
-        		boolean checkBool = false;
-        		argArray = new String[args.length];	
-        		for(int h = 0; h < args.length-1; h++) {
-        			argArray[h] = args[h+1];
-        		}
-        		argArray[argArray.length-1] = " ";
-            	Command = String.join(" ", argArray);
-        		String DebugMessage = String.join(" ", args); 
-        		String DebugServerlist = String.join(" ", ServerList); 
-        		String DebugServerAddress = String.join(" ", ServerAddresses);
-        		String DebugServerPorts = StringUtils.join(ArrayUtils.toObject(ServerPorts), " - ");
-        		debug("CommandArgument: "+ Argument0);
-        		debug("Label: "+ label);
-        		debug("Server List:" + DebugServerlist);
-        		debug("Server Address:" + DebugServerAddress);
-        		debug("Server Ports:" + DebugServerPorts);
-        		debug("Message: "+DebugMessage);
-        		boolean checkServerWithinArray = checkArray(Argument0);
-        		if(Argument0.equalsIgnoreCase("Reload") == true) {
-        			checkBool = Reload(sender);
-        		}
-        		else if (Argument0.equalsIgnoreCase("Help")) {
-        			checkBool = true;
-        			M.Help(sender);
-        		}
-        		else if (Argument0.equalsIgnoreCase("List")) {
-        			checkBool = list(sender);
-        		}
-        		else if (argArray.length < 2) {
-        			sender.sendMessage(PM[0]+PM[11]);
-        			checkBool = true;
-        			M.Help(sender);
-        		}
-        		else if (Argument0.equalsIgnoreCase(serverName) == true) {
-        			if (FeatureToggles[1] == true) {
-            			checkBool = true;
-        				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Command);
-            	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-            	    	logToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent Command:["+Command+"] to ["+Argument0+"]");
-        				
-        			}
-        		}
-        		else if (Argument0.equalsIgnoreCase("SendAll") == true) {
-        			if (FeatureToggles[1] == true) 
-        				checkBool = CSendAll(sender, Command);
-        		}
-        		else if(checkServerWithinArray == true) {
-        			if (FeatureToggles[1] == true) 
-        				checkBool = sendCommand(sender, Argument0, Command);
-        		} else {
-        			sender.sendMessage(PM[0]+PM[12]);
-        			checkBool = true;
-        			M.Help(sender);
-        		} 
-        		return checkBool;
+        		String Argument0 = args[0];
+               	String Command;
+           		boolean checkBool = false;
+           		argArray = new String[args.length];	
+           		for(int h = 0; h < args.length-1; h++) {
+           			argArray[h] = args[h+1];
+           		}
+           		argArray[argArray.length-1] = " ";
+               	Command = String.join(" ", argArray);
+           		String DebugMessage = String.join(" ", args); 
+           		String DebugServerlist = String.join(" ", ServerList); 
+           		String DebugServerAddress = String.join(" ", ServerAddresses);
+           		String DebugServerPorts = StringUtils.join(ArrayUtils.toObject(ServerPorts), " - ");
+           		debug("CommandArgument: "+ Argument0);
+            	debug("Label: "+ label);
+            	debug("Server List:" + DebugServerlist);
+           		debug("Server Address:" + DebugServerAddress);
+           		debug("Server Ports:" + DebugServerPorts);
+           		debug("Message: "+DebugMessage);
+           		boolean checkServerWithinArray = checkArray(Argument0);
+           		if(Argument0.equalsIgnoreCase("Reload") == true) {
+           			checkBool = Reload(sender);
+           		}
+           		else if (Argument0.equalsIgnoreCase("Help")) {
+          			checkBool = true;
+           			M.Help(sender);
+           		}
+            	else if (Argument0.equalsIgnoreCase("List")) {
+            		checkBool = list(sender);
+           		}
+            	else if (Argument0.equalsIgnoreCase("Debug")) {
+            		checkBool = debugCommand(sender);
+           		}
+           		else if (argArray.length < 2) {
+           			sender.sendMessage(PM[0]+PM[11]);
+           			checkBool = true;
+           			M.Help(sender);
+           		}
+           		else if (Argument0.equalsIgnoreCase(serverName) == true) {
+           			if (FeatureToggles[1] == true) {
+               			checkBool = true;
+           				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Command);
+               	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+               	    	logToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent Command:["+Command+"] to ["+Argument0+"]");
+            				
+            		}
+            	}
+            	else if (Argument0.equalsIgnoreCase("SendAll") == true) {
+           			if (FeatureToggles[1] == true) 
+           				checkBool = CSendAll(sender, Command);
+           		}
+           		else if(checkServerWithinArray == true) {
+           			if (FeatureToggles[1] == true) 
+           				checkBool = sendCommand(sender, Argument0, Command);
+           		} else {
+           			sender.sendMessage(PM[0]+PM[12]);
+           			checkBool = true;
+           			M.Help(sender);
+           		} 
+           		return checkBool;
+    				
+    			
     		} else if (label.equalsIgnoreCase("RB") == true) {
-    			String Argument0 = args[0];
-        	   	String Command;
-        		boolean checkBool = false;
-        		argArray = new String[args.length];	
-        		for(int h = 0; h < args.length-1; h++) {
-        			argArray[h] = args[h+1];
-        		}
-        		argArray[argArray.length-1] = " ";
-            	Command = String.join(" ", argArray);
-        		String DebugMessage = String.join(" ", args); 
-        		String DebugServerlist = String.join(" ", ServerList); 
-        		String DebugServerAddress = String.join(" ", ServerAddresses);
-        		String DebugServerPorts = StringUtils.join(ArrayUtils.toObject(ServerPorts), " - ");
-        		debug("CommandArgument: "+ Argument0);
-        		debug("Label: "+ label);
-        		debug("Server List:" + DebugServerlist);
-        		debug("Server Address:" + DebugServerAddress);
-        		debug("Server Ports:" + DebugServerPorts);
-        		debug("Message: "+DebugMessage);
-        		boolean checkServerWithinArray = checkArray(Argument0);
-        		if(Argument0.equalsIgnoreCase("Reload") == true) {
-        			checkBool = Reload(sender);
-        		}
-        		else if (Argument0.equalsIgnoreCase("Help")) {
-        			checkBool = true;
-        			M.Help(sender);
-        		}
-        		else if (Argument0.equalsIgnoreCase("List")) {
-        			checkBool = list(sender);
-        		}
-        		else if (argArray.length < 2) {
-        			sender.sendMessage(PM[0]+PM[11]);
-        			checkBool = true;
-        			M.Help(sender);
-        		}
-        		else if (Argument0.equalsIgnoreCase(serverName) == true) {
-        			if (FeatureToggles[2] == true) {
-            			checkBool = true;
-        				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Command);
-            	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-            	    	logToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent Command:["+Command+"] to ["+Argument0+"]");
-        				
-        			}
-        		}
-        		else if (Argument0.equalsIgnoreCase("SendAll") == true) {
-        			if (FeatureToggles[2] == true) 
-        				checkBool = BSendAll(sender, Command);
-        		}
-        		else if(checkServerWithinArray == true) {
-        			if (FeatureToggles[2] == true) 
-        				checkBool = sendBroadcast(sender, Argument0, Command);
-        		} else {
-        			sender.sendMessage(PM[0]+PM[12]);
-        			checkBool = true;
-        			M.Help(sender);
-        		} 
-        		return checkBool;
+        		String Argument0 = args[0];
+               	String Command;
+           		boolean checkBool = false;
+           		argArray = new String[args.length];	
+           		for(int h = 0; h < args.length-1; h++) {
+           			argArray[h] = args[h+1];
+           		}
+           		argArray[argArray.length-1] = " ";
+               	Command = String.join(" ", argArray);
+           		String DebugMessage = String.join(" ", args); 
+           		String DebugServerlist = String.join(" ", ServerList); 
+           		String DebugServerAddress = String.join(" ", ServerAddresses);
+           		String DebugServerPorts = StringUtils.join(ArrayUtils.toObject(ServerPorts), " - ");
+           		debug("CommandArgument: "+ Argument0);
+            	debug("Label: "+ label);
+            	debug("Server List:" + DebugServerlist);
+           		debug("Server Address:" + DebugServerAddress);
+           		debug("Server Ports:" + DebugServerPorts);
+           		debug("Message: "+DebugMessage);
+           		boolean checkServerWithinArray = checkArray(Argument0);
+           		if(Argument0.equalsIgnoreCase("Reload") == true) {
+           			checkBool = Reload(sender);
+           		}
+           		else if (Argument0.equalsIgnoreCase("Help")) {
+           			checkBool = true;
+           			M.Help(sender);
+           		}
+           		else if (Argument0.equalsIgnoreCase("List")) {
+            		checkBool = list(sender);
+            	}
+            	else if (Argument0.equalsIgnoreCase("Debug")) {
+            		checkBool = debugCommand(sender);
+           		}
+           		else if (argArray.length < 2) {
+           			sender.sendMessage(PM[0]+PM[11]);
+           			checkBool = true;
+           			M.Help(sender);
+           		}
+           		else if (Argument0.equalsIgnoreCase(serverName) == true) {
+           			if (FeatureToggles[2] == true) {
+               			checkBool = true;
+               			Bukkit.broadcastMessage(PM[18] + Command);
+               	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+               	    	logToFile("["+timeStamp+"][Send] Player ["+sender+"] Sent Command:["+Command+"] to ["+Argument0+"]");
+           				
+            		}
+            	}
+           		else if (Argument0.equalsIgnoreCase("SendAll") == true) {
+           			if (FeatureToggles[2] == true) 
+           				checkBool = BSendAll(sender, Command);
+           		}
+           		else if(checkServerWithinArray == true) {
+           			if (FeatureToggles[2] == true) 
+           				checkBool = sendBroadcast(sender, Argument0, Command);
+           		} else {
+           			sender.sendMessage(PM[0]+PM[12]);
+           			checkBool = true;
+           			M.Help(sender);
+           		} 
+           		return checkBool;
+    				
+    			
     		} else {
     			return false;
     		}
@@ -262,17 +261,17 @@ public class main extends JavaPlugin
     	}
     	return check; 
     }
-    public boolean Reload(CommandSender sender) {					
+    public boolean Reload(CommandSender sender) {	// Reloads Plugin				
     	loadPlugin();
     	debug("[Remote Commands][Client] Reload Completed.");   
     	sender.sendMessage(PM[0]+PM[17]);
     	return true;
     }
-    public boolean list(CommandSender sender) { 				
+    public boolean list(CommandSender sender) { 	// Lists all servers and performs Status Check			
     	sender.sendMessage(PM[0]+PM[16]);
     	return ListStatus(sender);
     }
-    public boolean debugCommand(CommandSender sender) {
+    public boolean debugCommand(CommandSender sender) {  // Toggles Debug Mode Status				
     	if (Debug == true) {
     		Debug = false;
     		sender.sendMessage(PM[0]+PM[2]);
@@ -282,7 +281,12 @@ public class main extends JavaPlugin
     	}
     	return true;
     }
-    
+    public static void addCommand(String Command) {
+    	commandWaiting = true;
+    	WCL[WCLIndex] = Command;
+    	WCLIndex++;
+    	debug("Command ["+ Command+"] Loaded To Memory. Awaiting repeating Task.");
+    }
     //#######################
     // Get Location Methods #
     //#######################
@@ -363,7 +367,6 @@ public class main extends JavaPlugin
     		if (Incoming.equals("True")) {
     			out.writeUTF("Test");
     			sender.sendMessage(PM[0]+remoteServer+PM[24]);
-    			debug(remoteServer +" Is ONLINE");
     		} else if (Incoming.equalsIgnoreCase("Invalid Passkey")){
     			sender.sendMessage(PM[0]+remoteServer+ PM[25]); 
     			System.out.println("[Remote Commands][Client][Error] A Command Was Rejected by "+remoteServer+" For an Invalid Passkey");
@@ -376,11 +379,7 @@ public class main extends JavaPlugin
     		//## Closes Connection ##
     		client.close(); //Closes Client Socket to allow for remote server to accept new connections
     	} catch (IOException e) {
-			sender.sendMessage(PM[0]+remoteServer+ PM[25]);   		
-    		System.out.println("[Remote Commands][Client][Error] Could not connect to "+remoteServer);
-    		System.out.println("[Remote Commands][Client][Error] Please check is remote server is online and configured Properly");
-	    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-	    	logErrorToFile("["+timeStamp+"] Could Not connect to "+remoteServer+" at: "+Server.toString()+":"+port);
+			sender.sendMessage(PM[0]+remoteServer+ PM[25]); 
     	}
     }
    
@@ -464,12 +463,7 @@ public class main extends JavaPlugin
 	    	logErrorToFile("["+timeStamp+"] Could Not connect to "+remoteServer+" at: "+Server.toString()+":"+port);
     	}
     }
-    public static void addCommand(String Command) {
-    	commandWaiting = true;
-    	WCL[WCLIndex] = Command;
-    	WCLIndex++;
-    	debug("Command ["+ Command+"] Loaded To Memory. Awaiting repeating Task.");
-    }
+
     
     //########################
     // Send Broadcast Methods#
@@ -610,42 +604,60 @@ public class main extends JavaPlugin
         } 
         
         //########### Retreiving Information ##############
+        LSD = config.getBoolean("Log-Startup-Dump");
+        logSID("Starting Log Dump");
+        logSID("");
+        logSID("");
+        logSID("");
         
         
         System.out.println("");		
 		Debug = config.getBoolean("Debug"); // Gets Debug Value 
 		debug("Debug Value: "+ Debug);
+        logSID("Debug Value: "+ Debug);
 		
-		if (Version == config.getDouble("Config-Version"))   {debug("Config Version Correct");}   else   { M.ConfigOutdated();}  // Checks if Config Version is Correct
-		if (config.getBoolean("FirstLoad") == true) { M.FirstLoad();}
+		if (Version == config.getDouble("Config-Version"))   {debug("Config Version Correct");logSID("Config Version Correct");}   else   { M.ConfigOutdated();}  // Checks if Config Version is Correct
+		if (config.getBoolean("FirstLoad") == true) { M.FirstLoad();logSID("First Load"); config.set("FirstLoad", true);}
 
 		serverName = config.getString("Server-Name");
 		debug("Server Name: "+ serverName);
+        logSID("Server Name: "+ serverName);
 		
 		Passkey = config.getInt("PassKey");
 		debug("Passkey: "+ Passkey);
+        logSID("Passkey: "+ Passkey);
 		
 		Port = config.getInt("Port-Listener");
 		debug("Port Retrieved from Config: "+Port);
+        logSID("Port Retrieved from Config: "+Port);
 		
 		listCount = config.getInt("Server-Count");
 		debug("Server List Count: "+ listCount);
+        logSID("Server List Count: "+ listCount);
 
         System.out.println("");	
         FeatureToggles[0] = config.getBoolean("T0"); // Gets Commands Received Value
-		debug("Log Commands Received Value: "+ FeatureToggles[0]);		
+		debug("Allow Commands Received Value: "+ FeatureToggles[0]);
+        logSID("Allow Commands Received Value: "+ FeatureToggles[0]);		
         FeatureToggles[1] = config.getBoolean("T1"); // Gets Commands Sent Value
-		debug("Log Commands Sent Value: "+ FeatureToggles[1]);		
+		debug("Allow Commands Sent Value: "+ FeatureToggles[1]);	
+        logSID("Allow Commands Sent Value: "+ FeatureToggles[1]);	
         FeatureToggles[2] = config.getBoolean("T2"); // Gets Broadcasts Received Value
-		debug("Log Broadcasts Received Value: "+ FeatureToggles[2]);		
+		debug("Allow Broadcasts Received Value: "+ FeatureToggles[2]);
+        logSID("Allow Broadcasts Received Value: "+ FeatureToggles[2]);		
         FeatureToggles[3] = config.getBoolean("T3"); // Gets Broadcasts Sent Value
-		debug("Log Broadcasts Sent Value: "+ FeatureToggles[3]);		
+		debug("Allow Broadcasts Sent Value: "+ FeatureToggles[3]);
+        logSID("Allow Broadcasts Sent Value: "+ FeatureToggles[3]);		
         FeatureToggles[4] = config.getBoolean("T4"); // Gets Incoming/Outgoing Log Value
-		debug("Log Incoming/OutGoing Value: "+ FeatureToggles[4]);		
+		debug("Log Incoming/OutGoing Value: "+ FeatureToggles[4]);
+        logSID("Log Incoming/OutGoing Value: "+ FeatureToggles[4]);		
         FeatureToggles[5] = config.getBoolean("T5"); //Gets Error Log Value
 		debug("Log Errors Value: "+ FeatureToggles[5]);
+        logSID("Log Errors Value: "+ FeatureToggles[5]);
+        
 		
 		debug("Loaded Config.yml");
+		logSID("Loaded Config.yml");
         System.out.println("");	
         System.out.println("[Remote Commands][Status] Config has been Loaded");		
 	}
@@ -667,10 +679,12 @@ public class main extends JavaPlugin
         
     	debug("Loading Servers.yml");
     	debug("Total Servers Found: "+listCount);
+        logSID("Total Servers Found: "+listCount);
     	ServerList = new String[listCount]; 
     	ServerAddresses = new String[listCount]; 
     	ServerPorts = new int[listCount];
     	debug("Displaying Servers Found in Servers.yml");
+        logSID("Displaying Servers Found in Servers.yml");
     	for (int x = 0; x < listCount; x++) { 
     		String serverName = Servers.getString("Server-List."+ x +".Name");
     		String serverAddress = Servers.getString("Server-List."+x+".Address");
@@ -680,8 +694,10 @@ public class main extends JavaPlugin
     		ServerPorts[x] = serverPort; 
     		int y = x+1;
     		debug(y+": |Name: "+serverName+"| |Host: "+ serverAddress+"| |Port: "+serverPort+"|");
+            logSID(y+": |Name: "+serverName+"| |Host: "+ serverAddress+"| |Port: "+serverPort+"|");
     	}
     	debug("Servers.yml Loaded");
+        logSID("Servers.yml Loaded");
     	
 
         System.out.println("");	
@@ -704,34 +720,36 @@ public class main extends JavaPlugin
         
         //########### Retreiving Information ##############
     	debug("Loading Messages");
-    	PM[0] = ChatColor.translateAlternateColorCodes('&', Messages.getString("GeneralPrefix")); debug("[Message]GeneralPrefix: "+PM[0]);
-    	PM[1] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-On")); debug("[Message]Debug-On: "+PM[1]);   
-    	PM[2] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-Off")); debug("[Message]Debug-Off: "+PM[2]); 
-    	PM[3] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Sender-Confirmation")); debug("[Message]Sender-Confirmation: "+PM[3]);
-    	PM[4] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-Menu-Title")); debug("[Message]Help-Menu-Title: "+PM[4]);
-    	PM[5] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-1")); debug("[Message]Help-1: "+PM[5]);
-    	PM[6] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-2")); debug("[Message]Help-2: "+PM[6]);
-    	PM[7] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-3")); debug("[Message]Help-3: "+PM[7]);
-    	PM[8] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-4")); debug("[Message]Help-4: "+PM[8]);
-    	PM[9] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-5")); debug("[Message]Help-5: "+PM[9]);
-    	PM[10] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-6")); debug("[Message]Help-6: "+PM[10]);
-    	PM[11] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-More-Arguments-Needed")); debug("[Message]Error-More-Arguments-Needed: "+PM[11]);
-    	PM[12] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Displaying-Help-Menu")); debug("[Message]Error-Displaying-Help-Menu: "+PM[12]);
-    	PM[13] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Command-Send-Misc")); debug("[Message]Error-Command-Send-Misc: "+PM[13]);
-    	PM[14] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Invalid-Passkey")); debug("[Message]Error-Invalid-Passkey: "+PM[14]);
-    	PM[15] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Connection-Error")); debug("[Message]Error-Connection-Error: "+PM[15]);
-    	PM[16] = ChatColor.translateAlternateColorCodes('&', Messages.getString("RC-Server-List")); debug("[Message]RC-Server-List: "+PM[16]);
-    	PM[17] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Plugin-Reload")); debug("[Message]Plugin-Reload: "+PM[17]);
-    	PM[18] = ChatColor.translateAlternateColorCodes('&', Messages.getString("BroadcastPrefix")); debug("[Message]BroadcastPrefix: "+PM[18]);
-    	PM[19] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Not-Accepting-Broadcasts")); debug("[Message]Error-Not-Accepting-Broadcasts: "+PM[19]); 
-    	PM[20] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-7")); debug("[Message]Help-7: "+PM[20]);   
-    	PM[21] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Not-Accepting-Commands")); debug("[Message]Error-Not-Accepting-Commands: "+PM[21]); 
-    	PM[22] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Sending-Commands-Disabled")); debug("[Message]Error-Sending-Commands-Disabled: "+PM[22]); 
-    	PM[23] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Sending-Commands-Disabled")); debug("[Message]Error-Sending-Commands-Disabled: "+PM[23]); 
-    	PM[24] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Status-Online")); debug("[Message]Status-Online: "+PM[24]);
-    	PM[25] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Status-Offline")); debug("[Message]Status-Offline: "+PM[25]);
-    	PM[26] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-8")); debug("[Message]Help-8: "+PM[26]);
+        logSID("Loading Messages");
+    	PM[0] = ChatColor.translateAlternateColorCodes('&', Messages.getString("GeneralPrefix")); 					   debug("[Message]GeneralPrefix: "+PM[0]); 						logSID("[Message]GeneralPrefix: "+PM[0]); 	
+    	PM[1] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-On")); 						   debug("[Message]Debug-On: "+PM[1]);    							logSID("[Message]Debug-On: "+PM[1]);
+    	PM[2] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Debug-Off")); 						   debug("[Message]Debug-Off: "+PM[2]);  							logSID("[Message]Debug-Off: "+PM[2]);
+    	PM[3] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Sender-Confirmation"));			 	   debug("[Message]Sender-Confirmation: "+PM[3]); 					logSID("[Message]Sender-Confirmation: "+PM[3]);
+    	PM[4] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-Menu-Title")); 			 	   debug("[Message]Help-Menu-Title: "+PM[4]); 						logSID("[Message]Help-Menu-Title: "+PM[4]);
+    	PM[5] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-1")); 							   debug("[Message]Help-1: "+PM[5]); 								logSID("[Message]Help-1: "+PM[5]);
+    	PM[6] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-2")); 							   debug("[Message]Help-2: "+PM[6]); 								logSID("[Message]Help-2: "+PM[6]);
+    	PM[7] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-3")); 						 	   debug("[Message]Help-3: "+PM[7]); 								logSID("[Message]Help-3: "+PM[7]);
+    	PM[8] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-4")); 						       debug("[Message]Help-4: "+PM[8]);								logSID("[Message]Help-4: "+PM[8]);
+    	PM[9] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-5")); 							   debug("[Message]Help-5: "+PM[9]); 								logSID("[Message]Help-5: "+PM[9]);
+    	PM[10] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-6")); 						   debug("[Message]Help-6: "+PM[10]); 								logSID("[Message]Help-6: "+PM[10]);
+    	PM[11] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-More-Arguments-Needed"));       debug("[Message]Error-More-Arguments-Needed: "+PM[11]); 			logSID("[Message]Error-More-Arguments-Needed: "+PM[11]);
+    	PM[12] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Displaying-Help-Menu")); 	   debug("[Message]Error-Displaying-Help-Menu: "+PM[12]); 			logSID("[Message]Error-Displaying-Help-Menu: "+PM[12]);
+    	PM[13] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Command-Send-Misc")); 		   debug("[Message]Error-Command-Send-Misc: "+PM[13]); 				logSID("[Message]Error-Command-Send-Misc: "+PM[13]);
+    	PM[14] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Invalid-Passkey")); 			   debug("[Message]Error-Invalid-Passkey: "+PM[14]); 				logSID("[Message]Error-Invalid-Passkey: "+PM[14]);
+    	PM[15] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Connection-Error")); 		   debug("[Message]Error-Connection-Error: "+PM[15]); 				logSID("[Message]Error-Connection-Error: "+PM[15]);
+    	PM[16] = ChatColor.translateAlternateColorCodes('&', Messages.getString("RC-Server-List")); 				   debug("[Message]RC-Server-List: "+PM[16]); 						logSID("[Message]RC-Server-List: "+PM[16]);
+    	PM[17] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Plugin-Reload")); 					   debug("[Message]Plugin-Reload: "+PM[17]); 						logSID("[Message]Plugin-Reload: "+PM[17]);
+    	PM[18] = ChatColor.translateAlternateColorCodes('&', Messages.getString("BroadcastPrefix")); 				   debug("[Message]BroadcastPrefix: "+PM[18]);						logSID("[Message]BroadcastPrefix: "+PM[18]);
+    	PM[19] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Not-Accepting-Broadcasts"));    debug("[Message]Error-Not-Accepting-Broadcasts: "+PM[19]); 		logSID("[Message]Error-Not-Accepting-Broadcasts: "+PM[19]);
+    	PM[20] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-7")); 						   debug("[Message]Help-7: "+PM[20]);   							logSID("[Message]Help-7: "+PM[20]);
+    	PM[21] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Not-Accepting-Commands"));	   debug("[Message]Error-Not-Accepting-Commands: "+PM[21]); 		logSID("[Message]Error-Not-Accepting-Commands: "+PM[21]);
+    	PM[22] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Sending-Commands-Disabled"));   debug("[Message]Error-Sending-Commands-Disabled: "+PM[22]);  	logSID("[Message]Error-Sending-Commands-Disabled: "+PM[22]);
+    	PM[23] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Error-Sending-Commands-Disabled"));   debug("[Message]Error-Sending-Commands-Disabled: "+PM[23]);  	logSID("[Message]Error-Sending-Commands-Disabled: "+PM[23]);
+    	PM[24] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Status-Online")); 					   debug("[Message]Status-Online: "+PM[24]); 						logSID("[Message]Status-Online: "+PM[24]);
+    	PM[25] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Status-Offline")); 				   debug("[Message]Status-Offline: "+PM[25]); 						logSID("[Message]Status-Offline: "+PM[25]);
+    	PM[26] = ChatColor.translateAlternateColorCodes('&', Messages.getString("Help-8")); 						   debug("[Message]Help-8: "+PM[26]); 								logSID("[Message]Help-8: "+PM[26]);
     	debug("Finished Loading Messages");
+        logSID("Finished Loading Messages");
         
         System.out.println("[Remote Commands] Messages.yml Loaded");
         
@@ -747,7 +765,34 @@ public class main extends JavaPlugin
 	   LSLWaiting = true;
 	   LSLIndex++;
    }
-   
+
+	public void logSID(String message) {			// Logs Startup Info Dump
+		 if (LSD == true) {
+				String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+				
+		        try
+		        {
+		            File RecievedCommandLog = getDataFolder();
+		            if(!RecievedCommandLog.exists())
+		            {
+		            	RecievedCommandLog.mkdir();
+		            } 
+		            File saveTo = new File(getDataFolder(), "StartupLog.txt");
+		            if (!saveTo.exists())
+		            {
+		                saveTo.createNewFile();
+		            } 
+		            FileWriter fw = new FileWriter(saveTo, true); 
+		            PrintWriter pw = new PrintWriter(fw);
+		            pw.println("|"+timeStamp+"|[SID] - "+message);
+		            pw.flush(); 
+		            pw.close(); 
+		        } catch (IOException e)
+		        {
+		            e.printStackTrace();
+		        } 
+		 }
+   }
 	public void logToFile(String message) {			// Logs Recieved Message to File
 		 if (FeatureToggles[4] == true) {
 		        try
@@ -796,7 +841,7 @@ public class main extends JavaPlugin
         {
             e.printStackTrace();
         } 
-    }    
+    }
 	public static void debug(String D) {
 	   if (Debug == true) {
 		   System.out.println("[Remote Commands][Debug]-> "+D);

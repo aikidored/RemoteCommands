@@ -22,7 +22,7 @@ Sender-Confirmation: '&e>>&3 Sent'
 
 #These Messages appear after running the debug toggle command 
 Debug-On: '&e>>&3 Debug Mode Enabled'
-Debug-Off:'&e>>&3 Debug Mode Disabled'
+Debug-Off: '&e>>&3 Debug Mode Disabled'
 
 # Title of Server list
 RC-Server-List: '&e>>&3 Server List '
@@ -47,7 +47,7 @@ Help-8: '&e>>&3&6/&3RC Debug &e>>&3 Toggles Current Status of Debug Mode'
 # Below are the Error Messages
 #
 
-# Shows whene player does not send enough parameters.
+# Shows when player does not send enough parameters.
 Error-More-Arguments-Needed: '&e>>&3 More Arguments Needed'
 
 # Shows when Unknown Command is Sent. 

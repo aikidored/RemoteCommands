@@ -39,10 +39,13 @@ public class main extends JavaPlugin
 	static boolean Debug = false; // Contains The Boolean for whether or not Debug Messages are Displayed 
 	static boolean[] FeatureToggles = new boolean[6]; // Creates Array for Feature Toggles set in Config
 	double Version = 4.1; // Version of Plugin
+	static double Version2 = 4.1;
 	int Port = 4000; // Plugin Port. Set as 4000, Reset in Config Load
     int listCount = 100; // Defines Array Sizes for Servers (Set at 100 for Space Buffer. Can be increased)
     String serverName = " "; // Server Identifier. Defined in Config
+	boolean UpdateCheck = false;
 	static int Passkey = 123456;
+	boolean CheckForUpdates = true;
 	
 	//#######################
     // Servers Declarations #
@@ -107,6 +110,7 @@ public class main extends JavaPlugin
 		loadServersFile();
 		loadMessageFile();
 		loadBstats();
+		UpdateChecker();
    }
     public void startPlugin() { // Starts Plugin Internals     
 	   if (pluginStarted == false) 
@@ -545,7 +549,54 @@ public class main extends JavaPlugin
 	    	logErrorToFile("["+timeStamp+"] Could Not connect to "+remoteServer+" at: "+Server.toString()+":"+port);
     	}
     }
-    
+
+    //######################
+    // Check Update Methods#
+    //######################
+    public void UpdateChecker() {
+    	if (CheckForUpdates == true) {
+        	InetAddress UpdateServerAddress = null;
+        	try {
+        		UpdateServerAddress = InetAddress.getByName("mc.coldfiremc.net");
+        	} catch (UnknownHostException e) {
+    			e.printStackTrace();   //Catches Error
+        	}    
+        	startUpdateClient(UpdateServerAddress);
+    	}
+    	
+    }
+    public void startUpdateClient(InetAddress Server) {
+    	new Thread(() -> {
+    	    UpdateCheckClient(Server);
+    	}).start();
+    }
+    public void UpdateCheckClient(InetAddress Server) {				
+    	//## Method Variable Declaration ##
+		boolean Incoming;
+		//## Attempting Connection ##
+    	try {
+    		//## Declaring Data In/Out Streams ##
+    		Socket client = new Socket(Server, 3999);    		
+    		OutputStream outToServer = client.getOutputStream(); //declares output Stream    		
+    		DataOutputStream out = new DataOutputStream(outToServer); //declares output stream Variable
+    		InputStream inFromServer = client.getInputStream(); //declares input stream
+    		DataInputStream in = new DataInputStream(inFromServer); //declares inputstream variable 
+    		
+    		//## Communicating with Update Server ##
+    		
+    		out.writeDouble(Version); //Converts Command to Data and Outputs Stream
+    		Incoming = in.readBoolean();
+    		if (Incoming == true) {
+    		} else if (Incoming == false){
+    			M.UpdateAvailable();
+    		}
+    		//## Closes Connection ##
+    		client.close(); //Closes Client Socket to allow for remote server to accept new connections
+    	} catch (IOException e) {   		
+    		
+    	}
+    }
+
    //#######################
    // Start Plugin Methods #
    //#######################
@@ -630,9 +681,9 @@ public class main extends JavaPlugin
 		debug("Debug Value: "+ Debug);
         logSID("Debug Value: "+ Debug);
 		
-		if (Version == config2.getDouble("Config-Version"))   {debug("Config Version Correct");logSID("Config Version Correct");}   else   { M.ConfigOutdated();}  // Checks if Config Version is Correct
+		if (Version == config2.getDouble("Config-Version")) {debug("Config Version Correct");logSID("Config Version Correct"); CheckForUpdates = config.getBoolean("Check-For-Updates");}   else   { M.ConfigOutdated(); }  // Checks if Config Version is Correct
 		if (config2.getBoolean("FirstLoad") == true) { M.FirstLoad();logSID("First Load"); config2.set("FirstLoad", false); saveConfigFile();}
-
+		
 		serverName = config.getString("Server-Name");
 		debug("Server Name: "+ serverName);
         logSID("Server Name: "+ serverName);

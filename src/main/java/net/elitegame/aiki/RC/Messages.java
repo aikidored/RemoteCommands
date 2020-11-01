@@ -30,7 +30,6 @@ public class Messages {
 		System.out.println("[RC][Debug][WARNING] -> Plugin May Not Function Correctly");
 	}
 	public void FirstLoad() {
-		//TODO write Welcome Message
         System.out.println(" ");	
         System.out.println("########### ");
         System.out.println(" ");	
@@ -66,6 +65,18 @@ public class Messages {
         System.out.println(" ");	
         System.out.println("########### ");
         System.out.println(" ");	
+	}
+	public void UpdateAvailable(){
+        System.out.println(" ");	
+        System.out.println("############");	
+        System.out.println("#  NOTICE  #");	
+        System.out.println("####################");	
+        System.out.println("#  Remote Commands #");	
+        System.out.println("#############################################################");	
+        System.out.println("# An Update is Available                                    #");	
+        System.out.println("# Please Check our Spigot Page:                             #");	
+        System.out.println("# https://www.spigotmc.org/resources/remote-commands.74321/ #");	
+        System.out.println("#############################################################");	
 	}
 	public void Help(CommandSender sender) {
 		sender.sendMessage(main.PM[4]);

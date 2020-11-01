@@ -15,6 +15,10 @@
 # If you Are Enjoying Remote Commands Please leave a review on Spigot https://www.spigotmc.org/resources/remote-commands.74321/
 #
 
+# Do you want this plugin to Check for Updates?
+# True/False
+Check-For-Updates: true
+
 # This Setting will log all Config Settings and Information Shown in Debug Mode to File. 
 # This will log all the information every time the server starts advised to leave false.
 Log-Startup-Dump: false

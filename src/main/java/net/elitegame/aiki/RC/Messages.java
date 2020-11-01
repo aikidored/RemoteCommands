@@ -6,7 +6,7 @@ public class Messages {
 
 	public void EnableMessage(){ //Message That Displays Upon Plugin Load
     	System.out.println("########################"); 
-    	System.out.println("# Remote Commands v4.0 #");
+    	System.out.println("# Remote Commands v4.1 #");
     	System.out.println("########################");
     	System.out.println("[Remote Commands] Made by Aikidored");
     	System.out.println("[Remote Commands] If you Enjoy. Please Leave a Review on the Spigot Page");
@@ -20,7 +20,7 @@ public class Messages {
 	}
 	public void DisableMessage(){ //Message That Displays Upon Plugin Termination
     	System.out.println( "########################"); 
-    	System.out.println( "# Remote Commands v4.0 #");
+    	System.out.println( "# Remote Commands v4.1 #");
     	System.out.println( "########################");
     	System.out.println("[Remote Commands] Disabled");
 	}
@@ -54,9 +54,9 @@ public class Messages {
         System.out.println("########### ");
         System.out.println("	WARNINGS and Disclaimers");	
         System.out.println(" ");	
-        System.out.println("	1. Remote Commands v4.0 is NOT Compatible with v3.1 and Below");	
-        System.out.println("	2. Remote Commands v4.0 Should Work on ALL Versions of Spigot. ");	
-        System.out.println("	3. Remote Commands v4.0 Will NOT work on a Bungeecord instance. ");	
+        System.out.println("	1. Remote Commands v4.1 is NOT Compatible with v3.1 and Below");	
+        System.out.println("	2. Remote Commands v4.1 Should Work on ALL Versions of Spigot. ");	
+        System.out.println("	3. Remote Commands v4.1 Will NOT work on a Bungeecord instance. ");	
         System.out.println("		3a. It can span across the network but NOT on the Bungee Server itself");	
         System.out.println("	4. The Passkey System is Basic. It will Stop a Basic Attack. But a Focused attack may penetrate it.");		
         System.out.println("		4a. Keep your IP Secret. and Keep the Ports used for Remote Commands Super Secret");	

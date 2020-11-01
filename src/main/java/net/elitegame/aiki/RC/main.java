@@ -38,7 +38,7 @@ public class main extends JavaPlugin
 	boolean LSD = false;  // Startup Log Information Dump Value
 	static boolean Debug = false; // Contains The Boolean for whether or not Debug Messages are Displayed 
 	static boolean[] FeatureToggles = new boolean[6]; // Creates Array for Feature Toggles set in Config
-	double Version = 4.0; // Version of Plugin
+	double Version = 4.1; // Version of Plugin
 	int Port = 4000; // Plugin Port. Set as 4000, Reset in Config Load
     int listCount = 100; // Defines Array Sizes for Servers (Set at 100 for Space Buffer. Can be increased)
     String serverName = " "; // Server Identifier. Defined in Config

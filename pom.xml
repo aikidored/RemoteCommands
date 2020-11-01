@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.elitegame.aiki</groupId>
   <artifactId>RemoteCommands</artifactId>
-  <version>4.0</version>
+  <version>4.1</version>
    <build>
       <plugins>
           <plugin>

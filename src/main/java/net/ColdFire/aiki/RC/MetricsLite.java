@@ -1,4 +1,4 @@
-package net.elitegame.aiki.RC;
+package net.ColdFire.aiki.RC;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

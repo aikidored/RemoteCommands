@@ -1,5 +1,5 @@
 name: RemoteCommands
-main: net.elitegame.aiki.RC.main
+main: net.ColdFire.aiki.RC.main
 version: 4.1
 author: aiki
 commands:

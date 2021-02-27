@@ -1,4 +1,4 @@
-package net.elitegame.aiki.RC;
+package net.ColdFire.aiki.RC;
 
 import java.io.DataInputStream;
 
